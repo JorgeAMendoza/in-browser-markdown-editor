@@ -10,7 +10,7 @@
       "name": "typescript-styled-plugin",
       "validate": false
     }],
-    "types": ["cypress", "node"],
+    "types": ["cypress", "cypress-localstorage-commands", "node"],
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
