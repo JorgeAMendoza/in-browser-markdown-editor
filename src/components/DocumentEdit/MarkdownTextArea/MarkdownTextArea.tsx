@@ -1,4 +1,8 @@
-const MarkdownTextArea = () => {
+interface MarkdownTextAreaProps {
+  setMarkdownText: React.Dispatch<string>;
+}
+
+const MarkdownTextArea = ({ setMarkdownText }: MarkdownTextAreaProps) => {
   return (
     <section>
       <div>
@@ -6,7 +10,10 @@ const MarkdownTextArea = () => {
       </div>
 
       <div>
-        <textarea />
+        <textarea
+          onChange={(e) => setMarkdownText(e.target.value)}
+          onBlur={(e) => setMarkdownText(e.target.value)}
+        />
       </div>
     </section>
   );

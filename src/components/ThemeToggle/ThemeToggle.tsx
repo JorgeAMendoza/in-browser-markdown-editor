@@ -1,5 +1,5 @@
-import darkIcon from '../../assets/icon-dark.svg';
-import lightIcon from '../../assets/icon-light.svg';
+import darkIcon from '../../assets/icon-dark-mode.svg';
+import lightIcon from '../../assets/icon-light-mode.svg';
 
 const ThemeToggle = () => {
   return (

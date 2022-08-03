@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 
 const DocumentEdit = () => {
+  const [markdownText, setMarkdownText] = useState('');
   return (
     <main>
-      <MarkdownTextArea />
-      <PreviewTextArea />
+      <MarkdownTextArea setMarkdownText={setMarkdownText} />
+      <PreviewTextArea markdownText={markdownText} />
     </main>
   );
 };

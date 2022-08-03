@@ -1,4 +1,4 @@
-import fileIcon from '../../../assets/file-icon.svg';
+import fileIcon from '../../../assets/icon-document.svg';
 
 const DocumentListItem = () => {
   return (

@@ -1,6 +1,15 @@
+import markdownIt from 'markdown-it';
 import resizeIcon from '../../../assets/icon-resize.svg';
+import ReactHtmlParser from 'react-html-parser';
 
-const PreviewTextArea = () => {
+interface PreviewTextAreaProps {
+  markdownText: string;
+}
+
+const md = new markdownIt();
+
+const PreviewTextArea = ({ markdownText }: PreviewTextAreaProps) => {
+  const html = md.render(markdownText);
   return (
     <section>
       <div>
@@ -9,7 +18,7 @@ const PreviewTextArea = () => {
           <img src={resizeIcon} />
         </div>
       </div>
-      <div>{/* markdown text area turned into action markdown here */}</div>
+      <div>{ReactHtmlParser(html)}</div>
     </section>
   );
 };

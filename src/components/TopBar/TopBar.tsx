@@ -1,8 +1,8 @@
 import menuIcon from '../../assets/icon-menu.svg';
 import logoIcon from '../../assets/logo.svg';
-import documentIcon from '../../assets/document-icon.svg';
-import deleteIcon from '../../assets/delete-icon.svg';
-import saveIcon from '../../assets/save-icon.svg';
+import documentIcon from '../../assets/icon-document.svg';
+import deleteIcon from '../../assets/icon-delete.svg';
+import saveIcon from '../../assets/icon-save.svg';
 
 const TopBar = () => {
   return (
