@@ -1,7 +1,13 @@
+import Menu from './components/Menu/Menu';
+import TopBar from './components/TopBar/TopBar';
+import DocumentEdit from './components/DocumentEdit/DocumentEdit';
+
 function App() {
   return (
     <div>
-      <h1>Markdown app</h1>
+      <TopBar />
+      <Menu />
+      <DocumentEdit />
     </div>
   );
 }
