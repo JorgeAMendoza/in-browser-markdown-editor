@@ -1,18 +1,19 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { MarkdownTextAreaProps } from '../../../types/prop-types';
 
-interface MarkdownTextAreaProps {
-  setMarkdownText: React.Dispatch<string>;
-}
-
-const MarkdownTextArea = ({ setMarkdownText }: MarkdownTextAreaProps) => {
+const MarkdownTextArea = ({
+  markdownText,
+  setMarkdownText,
+}: MarkdownTextAreaProps) => {
+  console.log(markdownText);
   return (
     <section>
       <div>
         <h1>markdown</h1>
       </div>
-
       <div>
         <textarea
+          defaultValue={markdownText}
           onChange={(e) => setMarkdownText(e.target.value)}
           onBlur={(e) => setMarkdownText(e.target.value)}
           onKeyDown={(e) => {

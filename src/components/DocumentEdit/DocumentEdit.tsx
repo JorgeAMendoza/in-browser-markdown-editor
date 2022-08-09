@@ -1,12 +1,14 @@
-import { useState } from 'react';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
+import { DocumentEditProps } from '../../types/prop-types';
 
-const DocumentEdit = () => {
-  const [markdownText, setMarkdownText] = useState('');
+const DocumentEdit = ({ markdownText, setMarkdownText }: DocumentEditProps) => {
   return (
     <main>
-      <MarkdownTextArea setMarkdownText={setMarkdownText} />
+      <MarkdownTextArea
+        setMarkdownText={setMarkdownText}
+        markdownText={markdownText}
+      />
       <PreviewTextArea markdownText={markdownText} />
     </main>
   );
