@@ -1,10 +1,7 @@
 import markdownIt from 'markdown-it';
 import resizeIcon from '../../../assets/icon-resize.svg';
 import ReactHtmlParser from 'react-html-parser';
-
-interface PreviewTextAreaProps {
-  markdownText: string;
-}
+import { PreviewTextAreaProps } from '../../../types/prop-types';
 
 const md = new markdownIt();
 
