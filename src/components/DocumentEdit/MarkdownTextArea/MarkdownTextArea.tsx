@@ -1,11 +1,9 @@
-import { useEffect } from 'react';
 import { MarkdownTextAreaProps } from '../../../types/prop-types';
 
 const MarkdownTextArea = ({
   markdownText,
   setMarkdownText,
 }: MarkdownTextAreaProps) => {
-  console.log(markdownText);
   return (
     <section>
       <div>

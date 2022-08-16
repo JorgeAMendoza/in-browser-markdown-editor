@@ -1,4 +1,1 @@
-export interface SavedDocument {
-  documentTitle: string;
-  documentContent: string;
-}
+export type SavedDocument = { [id: string]: string };

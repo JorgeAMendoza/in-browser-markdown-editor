@@ -13,3 +13,9 @@ export interface MarkdownTextAreaProps {
 export interface PreviewTextAreaProps {
   markdownText: DocumentEditProps['markdownText'];
 }
+
+export interface TopBarProps {
+  documentTitle: string;
+  setDocumentTitle: React.Dispatch<string>;
+  saveDocument: () => void;
+}
