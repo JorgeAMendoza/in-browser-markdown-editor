@@ -171,12 +171,20 @@ describe('testing markdown syntax', () => {
   });
 
   it('image rendered', () => {
-    // grab markdown text area
-    // type image markdown syntax
-    // grab the preview area
-    // check to see if a image element is there
-    // check to see if the href of teh element matches our input
-    // ensure that the alt tag is the same as the syntax
+    cy.get('@markdownTextArea').type(
+      '![Tux, the Linux mascot](https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1280px-Tux.svg.png)'
+    );
+    cy.get('@previewTextArea').find('img');
+    cy.get('@previewTextArea')
+      .find('img')
+      .should(
+        'have.attr',
+        'src',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/1280px-Tux.svg.png'
+      );
+    cy.get('@previewTextArea')
+      .find('img')
+      .should('have.attr', 'alt', 'Tux, the Linux mascot');
   });
 });
 
