@@ -25,11 +25,16 @@ describe('User opens page for first time', () => {
 });
 
 describe('User opens page with saved document in local storage', () => {
-  cy.setLocalStorage(
-    'my-markdown',
-    JSON.stringify(['# Welcome to my markdown!'])
-  );
+  before(() => {
+    cy.clearLocalStorage();
+    cy.setLocalStorage(
+      'savedDocuemnts',
+      JSON.stringify({ 'my-doc.md': 'this is a saved document' })
+    );
+  });
+
   beforeEach(() => {
+    cy.restoreLocalStorage();
     cy.visit('/');
     cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
     cy.get('[data-testid="previewText"]').as('previewText');
@@ -37,15 +42,16 @@ describe('User opens page with saved document in local storage', () => {
     cy.get('[data-testid="menuButton"]').as('menuButton');
   });
 
-  it('saved markdown text displayed and markdown area and preview', () => {
-    cy.get('@markdownTextArea').should(
-      'contain.text',
-      '# Welcome to my markdown!'
-    );
+  afterEach(() => {
+    cy.saveLocalStorage();
+  });
+
+  it('welcome.md is displayed when user loads page', () => {
+    cy.get('@markdownTextArea').should('contain.text', '# Welcome to Markdown');
     cy.get('@previewText')
       .find('h1')
-      .should('contain.text', 'Welcome to my markdown!');
-    cy.get('@documentNameTab').should('contain.text', 'my-markdown.md');
+      .should('contain.text', 'Welcome to markdown');
+    cy.get('@documentNameTab').should('contain.text', 'welcome.md');
   });
 
   it('saved markdown displayed in document list', () => {
@@ -54,14 +60,54 @@ describe('User opens page with saved document in local storage', () => {
     cy.get('[data-testid="documentList"]')
       .children()
       .find(':first-child')
-      .should('contain.text', 'my-markdown.md');
+      .should('contain.text', 'my-doc.md');
   });
 });
 
 describe('user opens page with multiple saved documents in local storage', () => {
-  // save multiple documents to local storage
-  // before each which visits the page and grabs markdown and preview text areas.
-  // first test, welcome exist in the local storage, so if we save we get a "overwrite" prompt
-  // second test, welcome does not exist, so when we save "welcome.md" will be a title in local storage, a key should at least exist.
-  // third test, a document named 'todo-list' will consist of unoredered list, so when user clicks it on the left panel, then we will get a prompt asking to save teh current "welcome", click no, then a new document popping up with text appears, compare text, ensure that name matches, and save.
+  before(() => {
+    cy.clearLocalStorage();
+    cy.setLocalStorage(
+      'savedDocuemnts',
+      JSON.stringify({
+        'my-doc.md': 'this is a saved document',
+        'my-other-doc.md': 'this is another saved docuement',
+        'test-doc.md': 'this is a test document',
+      })
+    );
+  });
+  beforeEach(() => {
+    cy.restoreLocalStorage();
+    cy.visit('/');
+    cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
+    cy.get('[data-testid="previewText"]').as('previewText');
+    cy.get('[data-testid="documentName"]').as('documentNameTab');
+    cy.get('[data-testid="menuButton"]').as('menuButton');
+  });
+  afterEach(() => {
+    cy.saveLocalStorage();
+  });
+  it('welcome.md displayed on page load up', () => {
+    cy.get('@markdownTextArea').should('contain.text', '# Welcome to Markdown');
+    cy.get('@previewText')
+      .find('h1')
+      .should('contain.text', 'Welcome to markdown');
+    cy.get('@documentNameTab').should('contain.text', 'welcome.md');
+  });
+
+  it('document list populated with three items', () => {
+    cy.get('@menuButton').click();
+    cy.get('[data-testid="documentList"]').children().should('have.length', 3);
+  });
+
+  it('document list has three named documents from local storage', () => {
+    cy.get('@menuButton').click();
+    cy.get('[data-testid="documentList"]')
+      .children()
+      .then(($item) => {
+        cy.wrap($item[0]).should('contain.text', 'my-doc.md');
+        cy.wrap($item[1]).should('contain.text', 'my-other-doc.md');
+        cy.wrap($item[2]).should('contain.text', 'test-doc.md');
+      });
+  });
 });
