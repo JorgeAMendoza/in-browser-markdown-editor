@@ -25,6 +25,7 @@ const documentContextSlice = createSlice({
     updateMarkdownContent(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.documentMarkdown = action.payload;
+      state.isNewDocument = false;
       return state;
     },
     setNullDocument(_state) {
@@ -46,6 +47,7 @@ export const initializeWelcomeMarkdown = () => {
       currentDocumentTitle: 'welcome.md',
       lastDocumentTitle: null,
       documentMarkdown: welcomeMarkdownText,
+      isNewDocument: true,
     };
     dispatch(setMarkdownInformation(welcomeMarkdown));
   };
@@ -60,6 +62,7 @@ export const changeDocument = (
       currentDocumentTitle: documentTitle,
       lastDocumentTitle: null,
       documentMarkdown: documentMarkdown,
+      isNewDocument: false,
     };
     dispatch(setMarkdownInformation(document));
   };
@@ -71,6 +74,7 @@ export const setNewDocument = () => {
       currentDocumentTitle: 'new-document.md',
       lastDocumentTitle: null,
       documentMarkdown: newDocumentMarkdownText,
+      isNewDocument: true,
     };
     dispatch(setMarkdownInformation(newMarkdown));
   };
