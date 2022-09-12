@@ -1,10 +1,16 @@
+import { useEffect } from 'react';
 import DocumentEdit from './components/DocumentEdit/DocumentEdit';
-import { SavedDocument } from './types/saved-document';
+import { useAppDispatch } from './util/hooks';
+import { initializeWelcomeMarkdown } from './redux/document-reducer';
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(initializeWelcomeMarkdown());
+  }, []);
   return (
     <div>
-      <h1>Hello World</h1>
+      <DocumentEdit />
     </div>
   );
 }

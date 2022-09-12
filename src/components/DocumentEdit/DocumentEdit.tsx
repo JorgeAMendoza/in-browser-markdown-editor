@@ -1,19 +1,27 @@
+import { useAppSelector } from '../../util/hooks';
+import { useState, useEffect } from 'react';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
-import { DocumentEditProps } from '../../types/prop-types';
 
-const DocumentEdit = ({ markdownText, setMarkdownText }: DocumentEditProps) => {
+const DocumentEdit = () => {
+  const [markdown, setMarkdown] = useState('');
+  const documentState = useAppSelector((state) => state);
+
+  useEffect(() => {
+    if (!documentState) {
+      setMarkdown('');
+      return;
+    }  
+    setMarkdown(documentState.documentMarkdown);
+  }, [documentState?.documentMarkdown]);
+
+  if (!documentState) return null;
   return (
     <main>
-      <MarkdownTextArea
-        setMarkdownText={setMarkdownText}
-        markdownText={markdownText}
-      />
-      <PreviewTextArea markdownText={markdownText} />
+      <MarkdownTextArea setMarkdownText={setMarkdown} markdownText={markdown} />
+      <PreviewTextArea markdownText={markdown} />
     </main>
   );
 };
 
 export default DocumentEdit;
-
-// we are going to add ways to goggle view and all that, but this will be the base structure
