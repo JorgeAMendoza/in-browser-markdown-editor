@@ -1,9 +1,10 @@
-import { MarkdownTextAreaProps } from '../../../types/prop-types';
+import { useAppDispatch, useAppSelector } from '../../../util/hooks';
+import { updateMarkdown } from '../../../redux/document-reducer';
 
-const MarkdownTextArea = ({
-  markdownText,
-  setMarkdownText,
-}: MarkdownTextAreaProps) => {
+const MarkdownTextArea = () => {
+  const documentState = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+
   return (
     <section>
       <div>
@@ -11,9 +12,9 @@ const MarkdownTextArea = ({
       </div>
       <div>
         <textarea
-          defaultValue={markdownText}
-          onChange={(e) => setMarkdownText(e.target.value)}
-          onBlur={(e) => setMarkdownText(e.target.value)}
+          defaultValue={documentState?.documentMarkdown || ''}
+          onChange={(e) => dispatch(updateMarkdown(e.target.value))}
+          onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
           onKeyDown={(e) => {
             const textArea = e.target;
             if (e.key === 'Tab') {
