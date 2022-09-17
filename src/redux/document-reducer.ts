@@ -25,7 +25,6 @@ const documentContextSlice = createSlice({
     updateMarkdownContent(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.documentMarkdown = action.payload;
-      state.isNewDocument = false;
       return state;
     },
     setNullDocument(_state) {
@@ -80,13 +79,19 @@ export const setNewDocument = () => {
   };
 };
 
-export const updateDocuemntTitle = (documentTitle: string) => {
+export const updateDocumentTitle = (documentTitle: string) => {
   return (dispatch: AppDispatch) => {
     dispatch(setMarkdownTitle(documentTitle));
   };
 };
 
 export const saveMarkdown = (documentMarkdown: string) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(updateMarkdownContent(documentMarkdown));
+  };
+};
+
+export const updateMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
     dispatch(updateMarkdownContent(documentMarkdown));
   };

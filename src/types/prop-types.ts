@@ -7,7 +7,7 @@ export interface DocumentEditProps {
 
 export interface MarkdownTextAreaProps {
   markdownText: DocumentEditProps['markdownText'];
-  setMarkdownText: DocumentEditProps['setMarkdownText'];
+  setMarkdownText: (content: string) => void;
 }
 
 export interface PreviewTextAreaProps {

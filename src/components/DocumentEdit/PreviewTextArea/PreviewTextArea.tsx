@@ -1,12 +1,13 @@
 import markdownIt from 'markdown-it';
 import resizeIcon from '../../../assets/icon-resize.svg';
 import ReactHtmlParser from 'react-html-parser';
-import { PreviewTextAreaProps } from '../../../types/prop-types';
+import { useAppSelector } from '../../../util/hooks';
 
 const md = new markdownIt();
 
-const PreviewTextArea = ({ markdownText }: PreviewTextAreaProps) => {
-  const html = md.render(markdownText);
+const PreviewTextArea = () => {
+  const documentState = useAppSelector((state) => state);
+  const html = md.render(documentState?.documentMarkdown || '');
   return (
     <section>
       <div>
