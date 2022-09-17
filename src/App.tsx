@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import DocumentEdit from './components/DocumentEdit/DocumentEdit';
 import { useAppDispatch } from './util/hooks';
 import { initializeWelcomeMarkdown } from './redux/document-reducer';
+import TopBar from './components/TopBar/TopBar';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -10,7 +11,8 @@ function App() {
   }, []);
   return (
     <div>
-      <DocumentEdit />
+      <TopBar />
+    <DocumentEdit />
     </div>
   );
 }
