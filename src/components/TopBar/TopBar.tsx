@@ -23,8 +23,13 @@ const TopBar = () => {
 
   const saveDocument = () => {
     const savedDocuments = localStorage.getItem('savedMarkdown');
+    const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]\.md$/;
     if (!documentState) return;
 
+    if (!validDocumentTitle.test(documentState.currentDocumentTitle)) {
+      console.log('invalid document title');
+      return;
+    }
     console.log('saving the document');
     // now we have access to the document title
     // now we have access to the document content
@@ -33,10 +38,6 @@ const TopBar = () => {
 
     // SAVING a document with nothing in local storage,
     // we need access to local storage as well, but we can just grab it from here
-
-    // ANYTIME WE SAVE
-    // check if the current document name is valid, for now let it go
-    // TODO: CHECK DOCUMENT NAME
 
     if (!savedDocuments)
       localStorage.setItem(
