@@ -16,17 +16,17 @@ const documentContextSlice = createSlice({
       const markdownInformation = action.payload;
       return markdownInformation;
     },
-    setMarkdownTitle(state) {
+    setOriginalMarkdownTitle(state) {
       if (!state) return state;
       state.originalDocumentTitle = state.currentDocumentTitle;
       return state;
     },
-    updateCurrentMarkdownTile(state, action: PayloadAction<string>) {
+    setCurrentMarkdownTitle(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.currentDocumentTitle = action.payload;
       return state;
     },
-    updateMarkdownContent(state, action: PayloadAction<string>) {
+    setMarkdownContent(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.documentMarkdown = action.payload;
       return state;
@@ -39,8 +39,9 @@ const documentContextSlice = createSlice({
 
 export const {
   setMarkdownInformation,
-  setMarkdownTitle,
-  updateMarkdownContent,
+  setOriginalMarkdownTitle,
+  setCurrentMarkdownTitle,
+  setMarkdownContent,
   setNullDocument,
 } = documentContextSlice.actions;
 
@@ -85,19 +86,25 @@ export const setNewDocument = () => {
 
 export const updateDocumentTitle = () => {
   return (dispatch: AppDispatch) => {
-    dispatch(setMarkdownTitle());
+    dispatch(setOriginalMarkdownTitle());
+  };
+};
+
+export const updateCurrentDocumentTitle = (title: string) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(setCurrentMarkdownTitle(title));
   };
 };
 
 export const saveMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
-    dispatch(updateMarkdownContent(documentMarkdown));
+    dispatch(setMarkdownContent(documentMarkdown));
   };
 };
 
 export const updateMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
-    dispatch(updateMarkdownContent(documentMarkdown));
+    dispatch(setMarkdownContent(documentMarkdown));
   };
 };
 
