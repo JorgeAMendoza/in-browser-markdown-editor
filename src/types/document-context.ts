@@ -1,7 +1,7 @@
 interface Document {
-  currentDocumentTitle: string;
+  originalDocumentTitle: string;
   documentMarkdown: string;
-  lastDocumentTitle: null | string;
+  currentDocumentTitle: string;
   isNewDocument: boolean;
 }
 

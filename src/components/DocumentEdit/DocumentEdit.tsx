@@ -5,6 +5,7 @@ import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 const DocumentEdit = () => {
   const documentState = useAppSelector((state) => state);
 
+  // if null, eventually return component that renders message.
   if (!documentState) return null;
   return (
     <main>

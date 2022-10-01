@@ -16,13 +16,17 @@ const documentContextSlice = createSlice({
       const markdownInformation = action.payload;
       return markdownInformation;
     },
-    setMarkdownTitle(state, action: PayloadAction<string>) {
+    setOriginalMarkdownTitle(state) {
       if (!state) return state;
-      state.lastDocumentTitle = state.currentDocumentTitle;
+      state.originalDocumentTitle = state.currentDocumentTitle;
+      return state;
+    },
+    setCurrentMarkdownTitle(state, action: PayloadAction<string>) {
+      if (!state) return state;
       state.currentDocumentTitle = action.payload;
       return state;
     },
-    updateMarkdownContent(state, action: PayloadAction<string>) {
+    setMarkdownContent(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.documentMarkdown = action.payload;
       return state;
@@ -35,16 +39,18 @@ const documentContextSlice = createSlice({
 
 export const {
   setMarkdownInformation,
-  setMarkdownTitle,
-  updateMarkdownContent,
+  setOriginalMarkdownTitle,
+  setCurrentMarkdownTitle,
+  setMarkdownContent,
   setNullDocument,
 } = documentContextSlice.actions;
 
+// On page load, intialize the context with the welcome markdown content, set the title as well
 export const initializeWelcomeMarkdown = () => {
   return (dispatch: AppDispatch) => {
     const welcomeMarkdown: DocumentContext = {
+      originalDocumentTitle: 'welcome.md',
       currentDocumentTitle: 'welcome.md',
-      lastDocumentTitle: null,
       documentMarkdown: welcomeMarkdownText,
       isNewDocument: true,
     };
@@ -52,14 +58,15 @@ export const initializeWelcomeMarkdown = () => {
   };
 };
 
+// when a user clicks a document in the list, switch to this page (if no conflicts exist)
 export const changeDocument = (
   documentTitle: string,
   documentMarkdown: string
 ) => {
   return (dispatch: AppDispatch) => {
     const document: DocumentContext = {
+      originalDocumentTitle: documentTitle,
       currentDocumentTitle: documentTitle,
-      lastDocumentTitle: null,
       documentMarkdown: documentMarkdown,
       isNewDocument: false,
     };
@@ -67,11 +74,12 @@ export const changeDocument = (
   };
 };
 
+// if user clicks new page (and accepts save or discard) then set context to new document markdown
 export const setNewDocument = () => {
   return (dispatch: AppDispatch) => {
     const newMarkdown: DocumentContext = {
+      originalDocumentTitle: 'new-document.md',
       currentDocumentTitle: 'new-document.md',
-      lastDocumentTitle: null,
       documentMarkdown: newDocumentMarkdownText,
       isNewDocument: true,
     };
@@ -79,21 +87,31 @@ export const setNewDocument = () => {
   };
 };
 
-export const updateDocumentTitle = (documentTitle: string) => {
+// update the origianal document title to the currnet one, should be fired off with save. (only if current document name differs from the original and there is no conflicts)
+export const updateDocumentTitle = () => {
   return (dispatch: AppDispatch) => {
-    dispatch(setMarkdownTitle(documentTitle));
+    dispatch(setOriginalMarkdownTitle());
   };
 };
 
+// fired when the input input is chagned, does not chagne original document name
+export const updateCurrentDocumentTitle = (title: string) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(setCurrentMarkdownTitle(title));
+  };
+};
+
+// fires when user saves document, sets the input in text area to property conttext
 export const saveMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
-    dispatch(updateMarkdownContent(documentMarkdown));
+    dispatch(setMarkdownContent(documentMarkdown));
   };
 };
 
+// fires when user modifies textbox contianing markdown, 
 export const updateMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
-    dispatch(updateMarkdownContent(documentMarkdown));
+    dispatch(setMarkdownContent(documentMarkdown));
   };
 };
 
