@@ -23,21 +23,14 @@ const TopBar = () => {
 
   const saveDocument = () => {
     const savedDocuments = localStorage.getItem('savedMarkdown');
-    const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]\.md$/;
+    const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
     if (!documentState) return;
-
+    
     if (!validDocumentTitle.test(documentState.currentDocumentTitle)) {
       console.log('invalid document title');
       return;
     }
     console.log('saving the document');
-    // now we have access to the document title
-    // now we have access to the document content
-
-    // lets
-
-    // SAVING a document with nothing in local storage,
-    // we need access to local storage as well, but we can just grab it from here
 
     if (!savedDocuments)
       localStorage.setItem(
@@ -59,7 +52,6 @@ const TopBar = () => {
       );
     } else if (!documentState.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      // so first one, if the names were the same, then just simply save.
       if (
         documentState.originalDocumentTitle ===
         documentState.currentDocumentTitle
@@ -67,6 +59,7 @@ const TopBar = () => {
         savedDocumentsObject[documentState.originalDocumentTitle] =
           documentState.documentMarkdown;
       else if (documentState.currentDocumentTitle in savedDocumentsObject) {
+        console.log('changed document title');
         // here the new title we gave our document is somethign that already exist in local storage.
         // we need prompt here to either ask to ovewrite the other document, or just cancel.
         // note that overwriting here is a bit differnet, since if we just save over the conflicted one, the "original" one will still be there,
