@@ -16,11 +16,6 @@ const documentContextSlice = createSlice({
       const markdownInformation = action.payload;
       return markdownInformation;
     },
-    setOriginalMarkdownTitle(state) {
-      if (!state) return state;
-      state.originalDocumentTitle = state.currentDocumentTitle;
-      return state;
-    },
     setCurrentMarkdownTitle(state, action: PayloadAction<string>) {
       if (!state) return state;
       state.currentDocumentTitle = action.payload;
@@ -34,15 +29,21 @@ const documentContextSlice = createSlice({
     setNullDocument(_state) {
       return null;
     },
+    documentSaved(state) {
+      if (!state) return state;
+      state.originalDocumentTitle = state.currentDocumentTitle;
+      state.isNewDocument = false;
+      return state;
+    },
   },
 });
 
 export const {
   setMarkdownInformation,
-  setOriginalMarkdownTitle,
   setCurrentMarkdownTitle,
   setMarkdownContent,
   setNullDocument,
+  documentSaved,
 } = documentContextSlice.actions;
 
 // On page load, intialize the context with the welcome markdown content, set the title as well
@@ -88,9 +89,9 @@ export const setNewDocument = () => {
 };
 
 // update the origianal document title to the currnet one, should be fired off with save. (only if current document name differs from the original and there is no conflicts)
-export const updateDocumentTitle = () => {
+export const saveDocumentInformation = () => {
   return (dispatch: AppDispatch) => {
-    dispatch(setOriginalMarkdownTitle());
+    dispatch(documentSaved());
   };
 };
 
@@ -101,14 +102,7 @@ export const updateCurrentDocumentTitle = (title: string) => {
   };
 };
 
-// fires when user saves document, sets the input in text area to property conttext
-export const saveMarkdown = (documentMarkdown: string) => {
-  return (dispatch: AppDispatch) => {
-    dispatch(setMarkdownContent(documentMarkdown));
-  };
-};
-
-// fires when user modifies textbox contianing markdown, 
+// fires when user modifies textbox contianing markdown,
 export const updateMarkdown = (documentMarkdown: string) => {
   return (dispatch: AppDispatch) => {
     dispatch(setMarkdownContent(documentMarkdown));

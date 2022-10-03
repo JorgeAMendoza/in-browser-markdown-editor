@@ -6,10 +6,10 @@ import deleteIcon from '../../assets/icon-delete.svg';
 import saveIcon from '../../assets/icon-save.svg';
 import { useAppDispatch, useAppSelector } from '../../util/hooks';
 import { SavedDocument } from '../../types/saved-document';
-import { updateCurrentDocumentTitle } from '../../redux/document-reducer';
-
-// TopBar is in charge of saving the documnet (takes in the save document), and changing the document title.
-// so if a user changes the document title, does this change the local storage immediatly? or should we just set it as a new document? I think the new document may be better, so if the user changes teh title, then the new document state needs to chagne as well.
+import {
+  updateCurrentDocumentTitle,
+  saveDocumentInformation,
+} from '../../redux/document-reducer';
 
 const TopBar = () => {
   const [disableSave, setDisableSave] = useState(false);
@@ -25,45 +25,59 @@ const TopBar = () => {
     const savedDocuments = localStorage.getItem('savedMarkdown');
     const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
     if (!documentState) return;
-    
+
     if (!validDocumentTitle.test(documentState.currentDocumentTitle)) {
       console.log('invalid document title');
       return;
     }
-    console.log('saving the document');
 
-    if (!savedDocuments)
+    if (!savedDocuments) {
       localStorage.setItem(
         'savedMarkdown',
         JSON.stringify({
           [documentState.currentDocumentTitle]: documentState.documentMarkdown,
         })
       );
-    else if (documentState.isNewDocument) {
+      dispatch(saveDocumentInformation());
+    } else if (documentState.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
       if (documentState.currentDocumentTitle in savedDocumentsObject)
         console.log('duplicate document found');
-      else
+      else {
         savedDocumentsObject[documentState.currentDocumentTitle] =
           documentState.documentMarkdown;
-      localStorage.setItem(
-        'savedMarkdown',
-        JSON.stringify(savedDocumentsObject)
-      );
+        localStorage.setItem(
+          'savedMarkdown',
+          JSON.stringify(savedDocumentsObject)
+        );
+        dispatch(saveDocumentInformation());
+      }
     } else if (!documentState.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
       if (
         documentState.originalDocumentTitle ===
         documentState.currentDocumentTitle
-      )
+      ) {
         savedDocumentsObject[documentState.originalDocumentTitle] =
           documentState.documentMarkdown;
-      else if (documentState.currentDocumentTitle in savedDocumentsObject) {
-        console.log('changed document title');
-        // here the new title we gave our document is somethign that already exist in local storage.
-        // we need prompt here to either ask to ovewrite the other document, or just cancel.
-        // note that overwriting here is a bit differnet, since if we just save over the conflicted one, the "original" one will still be there,
-        // what we need to do is overwrit ethe conflic, but then delete the original document name as well.
+        localStorage.setItem(
+          'savedMarkdown',
+          JSON.stringify(savedDocumentsObject)
+        );
+        dispatch(saveDocumentInformation);
+      } else {
+        if (!(documentState.currentDocumentTitle in savedDocumentsObject)) {
+          savedDocumentsObject[documentState.currentDocumentTitle] =
+            documentState.documentMarkdown;
+          delete savedDocumentsObject[documentState.originalDocumentTitle];
+          localStorage.setItem(
+            'savedMarkdown',
+            JSON.stringify(savedDocumentsObject)
+          );
+          dispatch(saveDocumentInformation());
+        } else {
+          console.log('conflict with changed name found');
+        }
       }
     }
   };
