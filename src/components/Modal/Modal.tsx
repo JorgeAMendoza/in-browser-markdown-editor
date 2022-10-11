@@ -1,19 +1,19 @@
 interface ModalProps {
   title: string;
   message: string;
-  confirmMethod: () => void;
-  cancelMethod?: () => void;
+  children: React.ReactNode;
 }
 
-const Modal = ({ title, message, confirmMethod, cancelMethod }: ModalProps) => {
+const Modal = ({
+  title,
+  message,
+  children,
+}: ModalProps) => {
   return (
     <div>
       <h3>{title}</h3>
       <p>{message}</p>
-      <div>
-        <button onClick={confirmMethod}>confirm</button>
-        {cancelMethod && <button onClick={cancelMethod}>cancel</button>}
-      </div>
+      <div>{children}</div>
     </div>
   );
 };

@@ -12,7 +12,9 @@ import { SavedDocument } from './types/saved-document';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { showDeleteModal, document } = useAppSelector((state) => state);
+  const { showTitleModal, showDeleteModal, document } = useAppSelector(
+    (state) => state
+  );
   useEffect(() => {
     dispatch(initializeWelcomeMarkdown());
   }, []);
@@ -40,9 +42,22 @@ function App() {
         <Modal
           title="delete document"
           message="Are you sure you want to delete the current document and its contents? This action cannot be reversed."
-          confirmMethod={confirmDelete}
-          cancelMethod={() => dispatch(removeModal('delete'))}
-        />
+        >
+          <button onClick={confirmDelete}>Confirm & Delete</button>
+          <button onClick={() => dispatch(removeModal('delete'))}>
+            Cancel
+          </button>
+        </Modal>
+      )}
+      {showTitleModal && (
+        <Modal
+          title="Invalid document name"
+          message={`The document title ${
+            document?.currentDocumentTitle || ''
+          } is invalid, please enter a valid document name`}
+        >
+          <button onClick={() => dispatch(removeModal('title'))}>OK</button>
+        </Modal>
       )}
       <TopBar />
       <DocumentEdit />
