@@ -8,16 +8,28 @@ import {
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
+import { SavedDocument } from './types/saved-document';
 
 function App() {
   const dispatch = useAppDispatch();
-  const { showDeleteModal } = useAppSelector((state) => state);
+  const { showDeleteModal, document } = useAppSelector((state) => state);
   useEffect(() => {
     dispatch(initializeWelcomeMarkdown());
   }, []);
 
   const confirmDelete = () => {
-    console.log('confirming delete');
+    if (!document) return;
+
+    const savedDocuments = localStorage.getItem('savedMarkdown');
+    if (!savedDocuments) {
+      dispatch(removeModal('delete'));
+      dispatch(deleteDocument());
+      return;
+    }
+    const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
+    delete savedDocumentsObject[document.originalDocumentTitle];
+    localStorage.setItem('savedMarkdown', JSON.stringify(savedDocumentsObject));
+
     dispatch(removeModal('delete'));
     dispatch(deleteDocument());
   };
