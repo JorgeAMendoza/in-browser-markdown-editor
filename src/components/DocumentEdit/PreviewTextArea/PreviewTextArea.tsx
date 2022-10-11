@@ -7,7 +7,7 @@ const md = new markdownIt();
 
 const PreviewTextArea = () => {
   const documentState = useAppSelector((state) => state);
-  const html = md.render(documentState?.documentMarkdown || '');
+  const html = md.render(documentState.document?.documentMarkdown || '');
   return (
     <section>
       <div>
