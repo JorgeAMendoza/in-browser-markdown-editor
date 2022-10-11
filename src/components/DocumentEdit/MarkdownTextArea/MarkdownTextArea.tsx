@@ -12,7 +12,7 @@ const MarkdownTextArea = () => {
       </div>
       <div>
         <textarea
-          defaultValue={documentState?.documentMarkdown || ''}
+          defaultValue={documentState.document?.documentMarkdown || ''}
           onChange={(e) => dispatch(updateMarkdown(e.target.value))}
           onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
           onKeyDown={(e) => {

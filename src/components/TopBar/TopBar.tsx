@@ -9,24 +9,25 @@ import { SavedDocument } from '../../types/saved-document';
 import {
   updateCurrentDocumentTitle,
   saveDocumentInformation,
+  displayModal,
 } from '../../redux/document-reducer';
 
 const TopBar = () => {
-  const [disableSave, setDisableSave] = useState(false);
-  const documentState = useAppSelector((state) => state);
+  const [disableAction, setDisableAction] = useState(false);
+  const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!documentState) setDisableSave(true);
-    else setDisableSave(false);
-  }, [documentState]);
+    if (!document) setDisableAction(true);
+    else setDisableAction(false);
+  }, [document]);
 
   const saveDocument = () => {
     const savedDocuments = localStorage.getItem('savedMarkdown');
     const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
-    if (!documentState) return;
+    if (!document) return;
 
-    if (!validDocumentTitle.test(documentState.currentDocumentTitle)) {
+    if (!validDocumentTitle.test(document.currentDocumentTitle)) {
       console.log('invalid document title');
       return;
     }
@@ -35,41 +36,38 @@ const TopBar = () => {
       localStorage.setItem(
         'savedMarkdown',
         JSON.stringify({
-          [documentState.currentDocumentTitle]: documentState.documentMarkdown,
+          [document.currentDocumentTitle]: document.documentMarkdown,
         })
       );
       dispatch(saveDocumentInformation());
-    } else if (documentState.isNewDocument) {
+    } else if (document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (documentState.currentDocumentTitle in savedDocumentsObject)
+      if (document.currentDocumentTitle in savedDocumentsObject)
         console.log('duplicate document found');
       else {
-        savedDocumentsObject[documentState.currentDocumentTitle] =
-          documentState.documentMarkdown;
+        savedDocumentsObject[document.currentDocumentTitle] =
+          document.documentMarkdown;
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
         );
         dispatch(saveDocumentInformation());
       }
-    } else if (!documentState.isNewDocument) {
+    } else if (!document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (
-        documentState.originalDocumentTitle ===
-        documentState.currentDocumentTitle
-      ) {
-        savedDocumentsObject[documentState.originalDocumentTitle] =
-          documentState.documentMarkdown;
+      if (document.originalDocumentTitle === document.currentDocumentTitle) {
+        savedDocumentsObject[document.originalDocumentTitle] =
+          document.documentMarkdown;
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
         );
         dispatch(saveDocumentInformation);
       } else {
-        if (!(documentState.currentDocumentTitle in savedDocumentsObject)) {
-          savedDocumentsObject[documentState.currentDocumentTitle] =
-            documentState.documentMarkdown;
-          delete savedDocumentsObject[documentState.originalDocumentTitle];
+        if (!(document.currentDocumentTitle in savedDocumentsObject)) {
+          savedDocumentsObject[document.currentDocumentTitle] =
+            document.documentMarkdown;
+          delete savedDocumentsObject[document.originalDocumentTitle];
           localStorage.setItem(
             'savedMarkdown',
             JSON.stringify(savedDocumentsObject)
@@ -83,7 +81,7 @@ const TopBar = () => {
   };
 
   const deleteDocument = () => {
-    console.log('deleting the document');
+    dispatch(displayModal('delete'));
   };
   return (
     <header>
@@ -102,12 +100,12 @@ const TopBar = () => {
           <div>
             <img src={documentIcon} alt="Document icon" />
           </div>
-          {!documentState ? null : (
+          {!document ? null : (
             <div>
               <p>document name</p>
               <input
                 type="text"
-                value={documentState.currentDocumentTitle || ''}
+                value={document?.currentDocumentTitle || ''}
                 onChange={({ target }) =>
                   dispatch(updateCurrentDocumentTitle(target.value))
                 }
@@ -121,10 +119,10 @@ const TopBar = () => {
       </div>
 
       <div>
-        <button onClick={deleteDocument}>
+        <button disabled={disableAction} onClick={deleteDocument}>
           <img src={deleteIcon} alt="Click to delete the document" />
         </button>
-        <button disabled={disableSave} onClick={() => saveDocument()}>
+        <button disabled={disableAction} onClick={() => saveDocument()}>
           <div>
             <img src={saveIcon} alt="Save the document" />
             <p>save changes</p>
