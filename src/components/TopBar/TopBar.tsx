@@ -28,7 +28,7 @@ const TopBar = () => {
     if (!document) return;
 
     if (!validDocumentTitle.test(document.currentDocumentTitle)) {
-      console.log('invalid document title');
+      dispatch(displayModal('title'));
       return;
     }
 
