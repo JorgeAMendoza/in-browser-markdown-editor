@@ -63,8 +63,8 @@ function App() {
         </Modal>
       )}
       {showMenu && <Menu />}
-      <TopBar setShowMenu={setShowMenu} />
-      <DocumentEdit /> 
+      <TopBar showMenu={showMenu} setShowMenu={setShowMenu} />
+      <DocumentEdit />
     </AppStyled>
   );
 }

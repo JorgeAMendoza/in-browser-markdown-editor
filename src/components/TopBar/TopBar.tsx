@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import menuIcon from '../../assets/icon-menu.svg';
+import closeMenuIcon from '../../assets/icon-close.svg';
 import logoIcon from '../../assets/logo.svg';
 import documentIcon from '../../assets/icon-document.svg';
 import deleteIcon from '../../assets/icon-delete.svg';
@@ -14,10 +15,11 @@ import {
 import TopBarStyled from './TopBar.styled';
 
 interface TopBarProps {
+  showMenu: boolean;
   setShowMenu: React.Dispatch<boolean>;
 }
 
-const TopBar = ({ setShowMenu }: TopBarProps) => {
+const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
   const [disableAction, setDisableAction] = useState(false);
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
@@ -92,8 +94,21 @@ const TopBar = ({ setShowMenu }: TopBarProps) => {
     <TopBarStyled>
       <div>
         <div>
-          <button onClick={() => setShowMenu(true)}>
-            <img src={menuIcon} alt="Menu Icon" />
+          <button
+            onClick={() => {
+              if (showMenu) setShowMenu(false);
+              else setShowMenu(true);
+            }}
+          >
+            {showMenu ? (
+              <img
+                src={closeMenuIcon}
+                alt="Close Menu Icon"
+                aria-label="Close the menu"
+              />
+            ) : (
+              <img src={menuIcon} alt="Menu Icon" aria-label="Open the menu" />
+            )}
           </button>
         </div>
 
