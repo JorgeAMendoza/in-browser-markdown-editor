@@ -11,8 +11,13 @@ import {
   saveDocumentInformation,
   displayModal,
 } from '../../redux/document-reducer';
+import TopBarStyled from './TopBar.styled';
 
-const TopBar = () => {
+interface TopBarProps {
+  setShowMenu: React.Dispatch<boolean>;
+}
+
+const TopBar = ({ setShowMenu }: TopBarProps) => {
   const [disableAction, setDisableAction] = useState(false);
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
@@ -84,10 +89,10 @@ const TopBar = () => {
     dispatch(displayModal('delete'));
   };
   return (
-    <header>
+    <TopBarStyled>
       <div>
         <div>
-          <button>
+          <button onClick={() => setShowMenu(true)}>
             <img src={menuIcon} alt="Menu Icon" />
           </button>
         </div>
@@ -129,7 +134,7 @@ const TopBar = () => {
           </div>
         </button>
       </div>
-    </header>
+    </TopBarStyled>
   );
 };
 

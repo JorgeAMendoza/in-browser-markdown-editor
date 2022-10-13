@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DocumentEdit from './components/DocumentEdit/DocumentEdit';
 import { useAppDispatch, useAppSelector } from './util/hooks';
 import {
@@ -9,8 +9,11 @@ import {
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
 import { SavedDocument } from './types/saved-document';
+import Menu from './components/Menu/Menu';
+import AppStyled from './App.styled';
 
 function App() {
+  const [showMenu, setShowMenu] = useState(false);
   const dispatch = useAppDispatch();
   const { showTitleModal, showDeleteModal, document } = useAppSelector(
     (state) => state
@@ -37,7 +40,7 @@ function App() {
   };
 
   return (
-    <div>
+    <AppStyled>
       {showDeleteModal && (
         <Modal
           title="delete document"
@@ -59,9 +62,10 @@ function App() {
           <button onClick={() => dispatch(removeModal('title'))}>OK</button>
         </Modal>
       )}
-      <TopBar />
-      <DocumentEdit />
-    </div>
+      {showMenu && <Menu />}
+      <TopBar setShowMenu={setShowMenu} />
+      <DocumentEdit /> 
+    </AppStyled>
   );
 }
 
