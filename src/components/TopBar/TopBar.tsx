@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import menuIcon from '../../assets/icon-menu.svg';
+import closeMenuIcon from '../../assets/icon-close.svg';
 import logoIcon from '../../assets/logo.svg';
 import documentIcon from '../../assets/icon-document.svg';
 import deleteIcon from '../../assets/icon-delete.svg';
@@ -11,8 +12,14 @@ import {
   saveDocumentInformation,
   displayModal,
 } from '../../redux/document-reducer';
+import TopBarStyled from './TopBar.styled';
 
-const TopBar = () => {
+interface TopBarProps {
+  showMenu: boolean;
+  setShowMenu: React.Dispatch<boolean>;
+}
+
+const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
   const [disableAction, setDisableAction] = useState(false);
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
@@ -84,11 +91,24 @@ const TopBar = () => {
     dispatch(displayModal('delete'));
   };
   return (
-    <header>
+    <TopBarStyled>
       <div>
         <div>
-          <button>
-            <img src={menuIcon} alt="Menu Icon" />
+          <button
+            onClick={() => {
+              if (showMenu) setShowMenu(false);
+              else setShowMenu(true);
+            }}
+          >
+            {showMenu ? (
+              <img
+                src={closeMenuIcon}
+                alt="Close Menu Icon"
+                aria-label="Close the menu"
+              />
+            ) : (
+              <img src={menuIcon} alt="Menu Icon" aria-label="Open the menu" />
+            )}
           </button>
         </div>
 
@@ -129,7 +149,7 @@ const TopBar = () => {
           </div>
         </button>
       </div>
-    </header>
+    </TopBarStyled>
   );
 };
 
