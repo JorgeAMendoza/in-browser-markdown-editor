@@ -40,7 +40,7 @@ function App() {
   };
 
   return (
-    <AppStyled>
+    <AppStyled menuVisible={showMenu}>
       {showDeleteModal && (
         <Modal
           title="delete document"
@@ -62,9 +62,11 @@ function App() {
           <button onClick={() => dispatch(removeModal('title'))}>OK</button>
         </Modal>
       )}
-      {showMenu && <Menu />}
-      <TopBar showMenu={showMenu} setShowMenu={setShowMenu} />
-      <DocumentEdit />
+      <Menu showMenu={showMenu} />
+      <div>
+        <TopBar showMenu={showMenu} setShowMenu={setShowMenu} />
+        <DocumentEdit />
+      </div>
     </AppStyled>
   );
 }

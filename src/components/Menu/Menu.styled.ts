@@ -1,12 +1,18 @@
 import styled from 'styled-components';
 
-const MenuStyled = styled.section`
-  border: 1px solid black;
-  grid-area: menu;
-  /* width: 0rem;
-  overflow: hidden; */
+interface MenuStyledProps {
+  menuVisible: boolean;
+}
 
-  min-width: 15rem;
+const MenuStyled = styled.section<MenuStyledProps>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.2s ease-in;
+  min-width: 23rem;
+  transform: ${({ menuVisible }) =>
+    menuVisible ? 'translateX(0)' : 'translateX(-23rem)'};
+  height: 100vh;
 `;
 
 export default MenuStyled;

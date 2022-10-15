@@ -1,9 +1,14 @@
 import DocumentList from '../DocumentList/DocumentList';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import MenuStyled from './Menu.styled';
-const Menu = () => {
+
+interface MenuProps {
+  showMenu: boolean;
+}
+
+const Menu = ({ showMenu }: MenuProps) => {
   return (
-    <MenuStyled>
+    <MenuStyled menuVisible={showMenu}>
       <h2>my documents</h2>
       <button>+ new document</button>
 
