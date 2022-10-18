@@ -16,8 +16,13 @@ import AppStyled from './App.styled';
 function App() {
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useAppDispatch();
-  const { showTitleModal, showDeleteModal, showDiscardNewModal, document } =
-    useAppSelector((state) => state);
+  const {
+    showTitleModal,
+    showDeleteModal,
+    showDiscardNewModal,
+    showDiscardSavedModal,
+    document,
+  } = useAppSelector((state) => state);
   useEffect(() => {
     dispatch(initializeWelcomeMarkdown());
   }, []);
@@ -40,7 +45,7 @@ function App() {
     dispatch(deleteDocument());
   };
 
-  const confirmNewDiscard = () => {
+  const confirmDiscard = () => {
     dispatch(setNewDocument());
     setShowMenu(false);
   };
@@ -58,6 +63,7 @@ function App() {
           </button>
         </Modal>
       )}
+
       {showTitleModal && (
         <Modal
           title="Invalid document name"
@@ -68,6 +74,7 @@ function App() {
           <button onClick={() => dispatch(removeModal('title'))}>OK</button>
         </Modal>
       )}
+
       {showDiscardNewModal && (
         <Modal
           title="discard new document"
@@ -78,7 +85,21 @@ function App() {
           <button onClick={() => dispatch(removeModal('discardNew'))}>
             cancel
           </button>
-          <button onClick={confirmNewDiscard}>confirm</button>
+          <button onClick={confirmDiscard}>confirm</button>
+        </Modal>
+      )}
+
+      {showDiscardSavedModal && (
+        <Modal
+          title="discard changes"
+          message={`do you want to discard any changes made to ${
+            document?.currentDocumentTitle || ''
+          }? This cannot be reversed.`}
+        >
+          <button onClick={() => dispatch(removeModal('discardSaved'))}>
+            cancel
+          </button>
+          <button onClick={confirmDiscard}>confirm</button>
         </Modal>
       )}
       <Menu showMenu={showMenu} />
