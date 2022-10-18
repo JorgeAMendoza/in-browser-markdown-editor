@@ -1,1 +1,6 @@
-export type ModalTypes = 'delete' | 'overwrite' | 'title' | 'discard';
+export type ModalTypes =
+  | 'delete'
+  | 'overwrite'
+  | 'title'
+  | 'discardNew'
+  | 'discardSaved';

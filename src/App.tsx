@@ -5,6 +5,7 @@ import {
   initializeWelcomeMarkdown,
   removeModal,
   deleteDocument,
+  setNewDocument,
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
@@ -15,9 +16,13 @@ import AppStyled from './App.styled';
 function App() {
   const [showMenu, setShowMenu] = useState(false);
   const dispatch = useAppDispatch();
-  const { showTitleModal, showDeleteModal, document } = useAppSelector(
-    (state) => state
-  );
+  const {
+    showTitleModal,
+    showDeleteModal,
+    showDiscardNewModal,
+    showDiscardSavedModal,
+    document,
+  } = useAppSelector((state) => state);
   useEffect(() => {
     dispatch(initializeWelcomeMarkdown());
   }, []);
@@ -29,6 +34,7 @@ function App() {
     if (!savedDocuments) {
       dispatch(removeModal('delete'));
       dispatch(deleteDocument());
+      setShowMenu(false);
       return;
     }
     const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
@@ -37,6 +43,11 @@ function App() {
 
     dispatch(removeModal('delete'));
     dispatch(deleteDocument());
+  };
+
+  const confirmDiscard = () => {
+    dispatch(setNewDocument());
+    setShowMenu(false);
   };
 
   return (
@@ -52,6 +63,7 @@ function App() {
           </button>
         </Modal>
       )}
+
       {showTitleModal && (
         <Modal
           title="Invalid document name"
@@ -60,6 +72,34 @@ function App() {
           } is invalid, please enter a valid document name`}
         >
           <button onClick={() => dispatch(removeModal('title'))}>OK</button>
+        </Modal>
+      )}
+
+      {showDiscardNewModal && (
+        <Modal
+          title="discard new document"
+          message={`do you want to discard the document ${
+            document?.currentDocumentTitle || ''
+          }? This cannot be reversed.`}
+        >
+          <button onClick={() => dispatch(removeModal('discardNew'))}>
+            cancel
+          </button>
+          <button onClick={confirmDiscard}>confirm</button>
+        </Modal>
+      )}
+
+      {showDiscardSavedModal && (
+        <Modal
+          title="discard changes"
+          message={`do you want to discard any changes made to ${
+            document?.currentDocumentTitle || ''
+          }? This cannot be reversed.`}
+        >
+          <button onClick={() => dispatch(removeModal('discardSaved'))}>
+            cancel
+          </button>
+          <button onClick={confirmDiscard}>confirm</button>
         </Modal>
       )}
       <Menu showMenu={showMenu} />

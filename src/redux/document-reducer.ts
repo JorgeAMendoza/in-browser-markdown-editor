@@ -31,7 +31,8 @@ const documentContextSlice = createSlice({
       return {
         document: null,
         showDeleteModal: false,
-        showDiscardModal: false,
+        showDiscardNewModal: false,
+        showDiscardSavedModal: false,
         showOverwriteModal: false,
         showTitleModal: false,
       };
@@ -49,8 +50,12 @@ const documentContextSlice = createSlice({
           state.showDeleteModal = true;
           break;
         }
-        case 'discard': {
-          state.showDiscardModal = true;
+        case 'discardNew': {
+          state.showDiscardNewModal = true;
+          break;
+        }
+        case 'discardSaved': {
+          state.showDiscardSavedModal = true;
           break;
         }
         case 'overwrite': {
@@ -72,8 +77,12 @@ const documentContextSlice = createSlice({
           state.showDeleteModal = false;
           break;
         }
-        case 'discard': {
-          state.showDiscardModal = false;
+        case 'discardNew': {
+          state.showDiscardNewModal = false;
+          break;
+        }
+        case 'discardSaved': {
+          state.showDiscardSavedModal = false;
           break;
         }
         case 'overwrite': {
@@ -113,7 +122,8 @@ export const initializeWelcomeMarkdown = () => {
         isNewDocument: true,
       },
       showDeleteModal: false,
-      showDiscardModal: false,
+      showDiscardNewModal: false,
+      showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
     };
@@ -135,7 +145,8 @@ export const changeDocument = (
         isNewDocument: false,
       },
       showDeleteModal: false,
-      showDiscardModal: false,
+      showDiscardNewModal: false,
+      showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
     };
@@ -153,7 +164,8 @@ export const setNewDocument = () => {
         isNewDocument: true,
       },
       showDeleteModal: false,
-      showDiscardModal: false,
+      showDiscardNewModal: false,
+      showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
     };

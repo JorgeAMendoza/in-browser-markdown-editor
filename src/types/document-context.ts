@@ -7,7 +7,8 @@ interface DocumentInfo {
 
 interface DocumentContext {
   showDeleteModal: boolean;
-  showDiscardModal: boolean;
+  showDiscardNewModal: boolean;
+  showDiscardSavedModal: boolean;
   showOverwriteModal: boolean;
   showTitleModal: boolean;
   document: DocumentInfo | null;
