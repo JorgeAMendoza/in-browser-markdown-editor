@@ -4,14 +4,19 @@ import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 import DocumentEditStyled from './DocumentEdit.styled';
 
 const DocumentEdit = () => {
-  const documentState = useAppSelector((state) => state);
+  const { document } = useAppSelector((state) => state);
 
   // if null, eventually return component that renders message.
-  if (!documentState) return null;
   return (
     <DocumentEditStyled>
-      <MarkdownTextArea />
-      <PreviewTextArea />
+      {document ? (
+        <>
+          <MarkdownTextArea />
+          <PreviewTextArea />
+        </>
+      ) : (
+        <p>Open a saved document or create a new document!</p>
+      )}
     </DocumentEditStyled>
   );
 };
