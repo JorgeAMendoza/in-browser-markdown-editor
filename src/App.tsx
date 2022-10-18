@@ -29,6 +29,13 @@ function App() {
 
   const confirmDelete = () => {
     if (!document) return;
+    console.log('document being deleted');
+
+    if (document.isNewDocument) {
+      console.log('new document being deleted');
+      dispatch(deleteDocument());
+      return;
+    }
 
     const savedDocuments = localStorage.getItem('savedMarkdown');
     if (!savedDocuments) {
