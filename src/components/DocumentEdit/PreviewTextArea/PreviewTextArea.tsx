@@ -16,7 +16,7 @@ const PreviewTextArea = () => {
           <img src={resizeIcon} />
         </div>
       </div>
-      <div>{ReactHtmlParser(html)}</div>
+      <div data-testid="previewTextArea">{ReactHtmlParser(html)}</div>
     </section>
   );
 };

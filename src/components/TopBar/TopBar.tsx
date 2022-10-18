@@ -95,6 +95,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       <div>
         <div>
           <button
+            data-testid="menuButton"
             onClick={() => {
               if (showMenu) setShowMenu(false);
               else setShowMenu(true);
@@ -124,6 +125,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             <div>
               <p>document name</p>
               <input
+                data-testid="documentName"
                 type="text"
                 value={document?.currentDocumentTitle || ''}
                 onChange={({ target }) =>

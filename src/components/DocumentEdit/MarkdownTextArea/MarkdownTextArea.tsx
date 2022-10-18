@@ -12,6 +12,7 @@ const MarkdownTextArea = () => {
       </div>
       <div>
         <textarea
+          data-testid="markdownTextArea"
           defaultValue={documentState.document?.documentMarkdown || ''}
           onChange={(e) => dispatch(updateMarkdown(e.target.value))}
           onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
