@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-/// <reference types="cypress-localstorage-commands" />
+import 'cypress-localstorage-commands';
 
 describe('testing markdown syntax', () => {
   beforeEach(() => {
@@ -32,7 +32,9 @@ describe('testing markdown syntax', () => {
   });
 
   it('paragraphs rendered', () => {
-    cy.get('@markdownTextArea').type('I really like using markdown.{enter}');
+    cy.get('@markdownTextArea').type(
+      'I really like using markdown.{enter}{enter}'
+    );
     cy.get('@markdownTextArea').type('I love using it with my GitHub Repos!');
 
     cy.get('@previewTextArea')
@@ -44,7 +46,9 @@ describe('testing markdown syntax', () => {
   });
 
   it('linebreak rendered', () => {
-    cy.get('@markdownTextArea').type('Creating a line break  {enter}');
+    cy.get('@markdownTextArea').type(
+      'Creating a line break  {enter}the line break should be right here'
+    );
     cy.get('@previewTextArea').find('br');
   });
 
@@ -52,7 +56,7 @@ describe('testing markdown syntax', () => {
     cy.get('@markdownTextArea').type('Creating bold text **here**');
     cy.get('@previewTextArea')
       .find('p')
-      .find('br')
+      .find('strong')
       .should('contain.text', 'here');
   });
 
@@ -92,9 +96,9 @@ describe('testing markdown syntax', () => {
     cy.get('@markdownTextArea').type('- Second item{enter}');
     cy.get('@markdownTextArea').type('- Third item');
 
-    cy.get('@markdownTextArea').find('ol').children().should('have.length', 3);
-    cy.get('@markdownTextArea')
-      .find('ol')
+    cy.get('@previewTextArea').find('ul').children().should('have.length', 3);
+    cy.get('@previewTextArea')
+      .find('ul')
       .find('li:nth-of-type(1)')
       .should('contain.text', 'First item');
   });
@@ -102,23 +106,23 @@ describe('testing markdown syntax', () => {
   it('ordered list inside of unordered list rendered', () => {
     cy.get('@markdownTextArea').type('- First item{enter}');
     cy.get('@markdownTextArea').type('- Second Item{enter}');
-    cy.get('@markdownTextArea').type('{tab}1. First numbered item{enter}');
+    cy.get('@markdownTextArea').type('    1. First numbered item{enter}');
     cy.get('@markdownTextArea').type('- Third item');
 
     cy.get('@previewTextArea').find('ul').children().should('have.length', 3);
     cy.get('@previewTextArea')
-      .find('ul > ol')
+      .find('ul li > ol')
       .children()
       .should('have.length', 1);
     cy.get('@previewTextArea')
-      .find('ul > ol')
+      .find('ul li > ol')
       .find('li')
       .should('contain.text', 'First numbered item');
   });
 
   it('blockquote rendered', () => {
     cy.get('@markdownTextArea').type(
-      '> This is the first line in a block quote{enter}'
+      '> This is the first line in a blockquote{enter}'
     );
     cy.get('@markdownTextArea').type('>{enter}');
     cy.get('@markdownTextArea').type(
@@ -139,7 +143,7 @@ describe('testing markdown syntax', () => {
   });
 
   it('codeblock rendered', () => {
-    cy.get('@mardownTextArea').type('{tab}This is some codeblock text');
+    cy.get('@markdownTextArea').type('    This is some codeblock text');
     cy.get('@previewTextArea')
       .find('code')
       .should('contain.text', 'This is some codeblock text');
@@ -185,26 +189,5 @@ describe('testing markdown syntax', () => {
     cy.get('@previewTextArea')
       .find('img')
       .should('have.attr', 'alt', 'Tux, the Linux mascot');
-  });
-});
-
-describe('typing into the markdown text box, edit saved document', () => {
-  cy.setLocalStorage(
-    'my-markdown',
-    JSON.stringify(['# Welcome to my markdown!'])
-  );
-  beforeEach(() => {
-    cy.visit('/');
-    cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
-    cy.get('[data-testid="previewText"]').as('previewText');
-    cy.get('[data-testid="documentName"]').as('documentNameTab');
-    cy.get('[data-testid="menuButton"]').as('menuButton');
-  });
-
-  it('user text is automatically updated into markdown on the right', () => {
-    cy.get('@markdownTextArea')
-      .focus()
-      .type('{enter}This is some updated text');
-    cy.get('@markdownTextArea').contains('This is some updated text');
   });
 });
