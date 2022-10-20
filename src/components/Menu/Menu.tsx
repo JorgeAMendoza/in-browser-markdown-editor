@@ -20,7 +20,9 @@ const Menu = ({ showMenu }: MenuProps) => {
   return (
     <MenuStyled menuVisible={showMenu}>
       <h2>my documents</h2>
-      <button onClick={newDocumentToggle}>+ new document</button>
+      <button onClick={newDocumentToggle} data-testid="newDocumentButton">
+        + new document
+      </button>
 
       <DocumentList />
       <ThemeToggle />

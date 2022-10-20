@@ -4,13 +4,9 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-const Modal = ({
-  title,
-  message,
-  children,
-}: ModalProps) => {
+const Modal = ({ title, message, children }: ModalProps) => {
   return (
-    <div>
+    <div data-testid="modalPrompt">
       <h3>{title}</h3>
       <p>{message}</p>
       <div>{children}</div>
