@@ -13,6 +13,7 @@ import {
   displayModal,
 } from '../../redux/document-reducer';
 import TopBarStyled from './TopBar.styled';
+import createSaveDate from '../../util/creat-save-date';
 
 interface TopBarProps {
   showMenu: boolean;
@@ -43,7 +44,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       localStorage.setItem(
         'savedMarkdown',
         JSON.stringify({
-          [document.currentDocumentTitle]: document.documentMarkdown,
+          [document.currentDocumentTitle]: {
+            documentMarkdown: document.documentMarkdown,
+            date: createSaveDate(new Date()),
+          },
         })
       );
       dispatch(saveDocumentInformation());
@@ -52,8 +56,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       if (document.currentDocumentTitle in savedDocumentsObject)
         console.log('duplicate document found');
       else {
-        savedDocumentsObject[document.currentDocumentTitle] =
+        savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
           document.documentMarkdown;
+        savedDocumentsObject[document.currentDocumentTitle].date =
+          createSaveDate(new Date());
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
@@ -63,8 +69,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
     } else if (!document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
       if (document.originalDocumentTitle === document.currentDocumentTitle) {
-        savedDocumentsObject[document.originalDocumentTitle] =
+        savedDocumentsObject[document.originalDocumentTitle].documentMarkdown =
           document.documentMarkdown;
+        savedDocumentsObject[document.originalDocumentTitle].date =
+          createSaveDate(new Date());
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
@@ -72,8 +80,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
         dispatch(saveDocumentInformation);
       } else {
         if (!(document.currentDocumentTitle in savedDocumentsObject)) {
-          savedDocumentsObject[document.currentDocumentTitle] =
+          savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
             document.documentMarkdown;
+          savedDocumentsObject[document.currentDocumentTitle].date =
+            createSaveDate(new Date());
           delete savedDocumentsObject[document.originalDocumentTitle];
           localStorage.setItem(
             'savedMarkdown',
