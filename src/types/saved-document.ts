@@ -1,1 +1,6 @@
-export type SavedDocument = { [id: string]: string };
+export interface SavedDocument {
+  [id: string]: {
+    documentMarkdown: string;
+    date: string;
+  };
+}
