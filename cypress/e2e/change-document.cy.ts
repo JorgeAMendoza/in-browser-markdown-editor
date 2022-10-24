@@ -1,110 +1,98 @@
 /// <reference types="cypress" />
 /// <reference types="cypress-localstorage-commands" />
+import createSaveDate from '../../src/util/creat-save-date';
 
-describe('user switching document from new document', () => {
-  before(() => {
-    cy.clearLocalStorage();
+describe('switching documents', () => {
+  beforeEach(() => {
+    cy.visit('/');
     cy.setLocalStorage(
       'savedDocuemnts',
       JSON.stringify({ 'my-doc.md': 'this is a saved document' })
     );
-  });
-
-  beforeEach(() => {
-    cy.visit('/');
     cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
     cy.get('[data-testid="previewText"]').as('previewText');
-    cy.get('[data-testid="documentName"]').as('documentNameTab');
+    cy.get('[data-testid="documentName"]').as('documentNameInput');
     cy.get('[data-testid="menuButton"]').as('menuButton');
+    cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
   });
 
-  afterEach(() => {
-    cy.saveLocalStorage();
-  });
-
-  test('switch document, save prompt appears', () => {
+  it('switch from welcome.md document, cancel switch', () => {
     cy.get('@menuButton').click();
-    cy.get('[data-testid="documentList"]').find('li').click();
+    cy.get('[data-testid="documentList"]')
+      .find('li')
+      .contains('my-doc.md')
+      .click();
 
-    cy.get('[data-testid="savePrompt"]')
-      .find('h3')
-      .should('contain.text', 'Discard new document?');
-  });
-
-  test('switch document, discard the new document', () => {
-    cy.get('@menuButton').click();
-    cy.get('[data-testid="documentList"]').find('li').click();
-
-    cy.get('[data-testid="savePrompt"]')
+    cy.get('[data-testid="modalPrompt"]')
       .find('h3')
       .should('contain.text', 'Discard new document?');
 
-    cy.get('[data-testid="savePromptDiscard"]').click();
-    cy.get('[data-testid="savePrompt"]').should('not.exist');
-
-    cy.get('@documentNameTab').should('contain.text', 'new-document.md');
-
-    // TODO, local storage should not contain welcome.md
+    cy.get('[data-testid="modalPrompt"]').find('button:nth-of-type(1)').click();
+    cy.get('[data-testid="modalPrompt"]').should('not.exist');
+    cy.get('documentNameInput').should('contain.value', 'welcome.md');
   });
 
-  test('switch document, save new document, no conflicts', () => {
+  it('switch from welcome.md document, discard the new document', () => {
     cy.get('@menuButton').click();
-    cy.get('[data-testid="documentList"]').find('li').click();
+    cy.get('[data-testid="documentList"]')
+      .find('li')
+      .contains('my-doc.md')
+      .click();
 
-    cy.get('[data-testid="savePrompt"]')
+    cy.get('[data-testid="modalPrompt"]')
       .find('h3')
       .should('contain.text', 'Discard new document?');
 
-    cy.get('[data-testid="savePromptSave"]').click();
-    cy.get('[data-testid="savePrompt"]').should('not.exist');
+    cy.get('[data-testid="modalPrompt"]').find('button:nth-of-type(2)').click();
+    cy.get('[data-testid="modalPrompt"]').should('not.exist');
 
-    cy.get('@documentNameTab').should('contain.text', 'new-document.md');
-
-    // TODO: Check localstorage to see that welcome.md is now saved.
+    cy.get('@documentNameTab').should('contain.text', 'my-doc.md');
   });
 
-  test('switch document, conflict with local storage, return to doc', () => {
+  it('switch document, edit document and save', () => {
     cy.get('@menuButton').click();
-    cy.get('[data-testid="documentList"]').find('li').click();
+    cy.get('[data-testid="documentList"]')
+      .find('li')
+      .contains('my-doc.md')
+      .click();
 
-    cy.get('[data-testid="savePrompt"]')
+    cy.get('[data-testid="modalPrompt"]')
       .find('h3')
       .should('contain.text', 'Discard new document?');
 
-    cy.get('[data-testid="savePromptSave"]').click();
+    cy.get('[data-testid="modalPrompt"]').find('button:nth-of-type(2)').click();
 
-    cy.get('[data-testid="savePrompt"]')
-      .find('h3')
-      .should('contain.text', 'Overwrite Document?');
-
-    cy.get('[data-testid="savePromptCancel"]');
-
-    cy.get('[data-testid="savePrompt"]').should('not.exist');
-    cy.get('@documentNameTab').should('contain.text', 'welcome.md');
-  });
-
-  test('switch document, conflict with local storage, overwrite', () => {
+    cy.get('@documentNameTab').should('contain.value', 'my-doc.md');
     cy.get('@markdownTextArea').type(
-      '{selectAll}{backspace}This is new markdown'
+      '{selectAll}{backspace}The document has been edited'
     );
-
+    cy.get('@saveDocumentButton').click();
     cy.get('@menuButton').click();
-    cy.get('[data-testid="documentList"]').find('li').click();
+    cy.get('[data-testid="documentList"]').children().should('have.length', 1);
+    cy.get('[data-testid="documentList"]')
+      .find('li')
+      .contains('my-doc.md')
+      .find('div p')
+      .should('contain.text', createSaveDate(new Date(0)));
+  });
 
-    cy.get('[data-testid="savePrompt"]')
+  it('create new saved document, switch to my-doc.md', () => {
+    cy.get('@documentSaveButton').click();
+    cy.get('@menuButton').click();
+
+    cy.get('[data-testid="documentList"]').children().should('have.length', 2);
+    cy.get('[data-testid="documentList"]')
+      .find('li')
+      .contains('my-doc.md')
+      .click();
+    cy.get('[data-testid="modalPrompt"]')
       .find('h3')
-      .should('contain.text', 'Discard new document?');
+      .should('contain.text', 'Discard changes?');
+    cy.get('[data-testid="documentList"]')
+      .find('button:nth-of-type(2)')
+      .click();
 
-    cy.get('[data-testid="savePromptSave"]').click();
-
-    cy.get('[data-testid="savePrompt"]')
-      .find('h3')
-      .should('contain.text', 'Overwrite Document?');
-
-    cy.get('[data-testid="savePromptConfirm"]').click();
-
-    cy.get('@documentNameTab').should('contain.text', 'new-document.md');
-
-    // TODO: Check local storage to see that welcome.md has the updated text of this is new markdown
+    cy.get('[data-testid="modalPrompt"]').should('not.exist');
+    cy.get('@documentNameInput').should('contian.value', 'my-doc.md');
   });
 });
