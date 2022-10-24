@@ -8,7 +8,7 @@ const DocumentListItem = () => {
       </div>
       <div>
         <p>document</p>
-        <p>document-name.md</p>
+        <h4>document-name.md</h4>
       </div>
     </li>
   );
