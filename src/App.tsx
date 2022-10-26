@@ -6,12 +6,14 @@ import {
   removeModal,
   deleteDocument,
   setNewDocument,
+  saveDocumentInformation,
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
 import { SavedDocument } from './types/saved-document';
 import Menu from './components/Menu/Menu';
 import AppStyled from './App.styled';
+import createSaveDate from './util/creat-save-date';
 
 function App() {
   const [showMenu, setShowMenu] = useState(false);
@@ -21,6 +23,7 @@ function App() {
     showDeleteModal,
     showDiscardNewModal,
     showDiscardSavedModal,
+    showOverwriteModal,
     document,
   } = useAppSelector((state) => state);
   useEffect(() => {
@@ -57,6 +60,33 @@ function App() {
     setShowMenu(false);
   };
 
+  const confirmOverwrite = () => {
+    if (!document) return;
+    const isNewDocument = document.isNewDocument;
+    const savedMarkdown = localStorage.getItem('savedMarkdown');
+    if (!savedMarkdown) return;
+    const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+
+    if (isNewDocument) {
+      savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
+        document.documentMarkdown;
+      savedMarkdownObject[document.currentDocumentTitle].date = createSaveDate(
+        new Date()
+      );
+      dispatch(saveDocumentInformation());
+    } else {
+      delete savedMarkdownObject[document.originalDocumentTitle];
+      savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
+        document.documentMarkdown;
+      savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
+        createSaveDate(new Date());
+      dispatch(saveDocumentInformation());
+    }
+
+    localStorage.setItem('savedMarkdown', JSON.stringify(savedMarkdownObject));
+    dispatch(removeModal('overwrite'));
+  };
+
   return (
     <AppStyled menuVisible={showMenu}>
       {showDeleteModal && (
@@ -68,6 +98,15 @@ function App() {
           <button onClick={() => dispatch(removeModal('delete'))}>
             Cancel
           </button>
+        </Modal>
+      )}
+
+      {showOverwriteModal && (
+        <Modal title="Duplicate document" message="Document ">
+          <button onClick={() => dispatch(removeModal('overwrite'))}>
+            Cancel
+          </button>
+          <button onClick={confirmOverwrite}>Confirm & Overwrite</button>
         </Modal>
       )}
 

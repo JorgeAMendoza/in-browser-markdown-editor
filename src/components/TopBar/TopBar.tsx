@@ -54,7 +54,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
     } else if (document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
       if (document.currentDocumentTitle in savedDocumentsObject)
-        console.log('duplicate document found');
+        dispatch(displayModal('overwrite'));
       else {
         savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
           document.documentMarkdown;
