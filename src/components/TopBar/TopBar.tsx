@@ -56,10 +56,11 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       if (document.currentDocumentTitle in savedDocumentsObject)
         dispatch(displayModal('overwrite'));
       else {
-        savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
-          document.documentMarkdown;
-        savedDocumentsObject[document.currentDocumentTitle].date =
-          createSaveDate(new Date());
+        const newSave = {
+          documentMarkdown: document.documentMarkdown,
+          date: createSaveDate(new Date()),
+        };
+        savedDocumentsObject[document.currentDocumentTitle] = newSave;
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
@@ -91,7 +92,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
           );
           dispatch(saveDocumentInformation());
         } else {
-          console.log('conflict with changed name found');
+          dispatch(displayModal('overwrite'));
         }
       }
     }
