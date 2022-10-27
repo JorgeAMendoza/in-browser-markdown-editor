@@ -1,14 +1,22 @@
 import fileIcon from '../../../assets/icon-document.svg';
 
-const DocumentListItem = () => {
+interface DocumentListItemProps {
+  documentDate: string;
+  documentTitle: string;
+}
+
+const DocumentListItem = ({
+  documentDate,
+  documentTitle,
+}: DocumentListItemProps) => {
   return (
     <li>
       <div>
         <img src={fileIcon} alt="file icon" />
       </div>
       <div>
-        <p>document</p>
-        <h4>document-name.md</h4>
+        <p>{documentDate}</p>
+        <h4>{documentTitle}</h4>
       </div>
     </li>
   );
