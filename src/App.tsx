@@ -8,6 +8,7 @@ import {
   setNewDocument,
   saveDocumentInformation,
   removeTargetDoc,
+  changeDocument,
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
@@ -91,7 +92,28 @@ function App() {
   };
 
   const confirmSwitch = () => {
-    console.log(targetSwitch);
+    const targetDocumentTitle = targetSwitch;
+    const savedMarkdown = localStorage.getItem('savedMarkdown');
+    if (!savedMarkdown || !targetDocumentTitle) return;
+
+    const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+
+    if (!savedMarkdownObject[targetDocumentTitle]) {
+      console.log(
+        'the document was able to be selected, but cannot be reached for some reason'
+      );
+      dispatch(removeTargetDoc());
+      dispatch(removeModal('switch'));
+      // here we need to bring up the error modal
+      return;
+    } else {
+      dispatch(
+        changeDocument(
+          targetDocumentTitle,
+          savedMarkdownObject[targetDocumentTitle].documentMarkdown
+        )
+      );
+    }
     dispatch(removeTargetDoc());
     dispatch(removeModal('switch'));
   };
