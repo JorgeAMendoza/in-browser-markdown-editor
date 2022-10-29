@@ -7,6 +7,8 @@ import {
   deleteDocument,
   setNewDocument,
   saveDocumentInformation,
+  removeTargetDoc,
+  changeDocument,
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
@@ -24,6 +26,8 @@ function App() {
     showDiscardNewModal,
     showDiscardSavedModal,
     showOverwriteModal,
+    showSwitchModal,
+    targetSwitch,
     document,
   } = useAppSelector((state) => state);
   useEffect(() => {
@@ -32,10 +36,8 @@ function App() {
 
   const confirmDelete = () => {
     if (!document) return;
-    console.log('document being deleted');
 
     if (document.isNewDocument) {
-      console.log('new document being deleted');
       dispatch(deleteDocument());
       return;
     }
@@ -53,6 +55,7 @@ function App() {
 
     dispatch(removeModal('delete'));
     dispatch(deleteDocument());
+    window.dispatchEvent(new Event('storage'));
   };
 
   const confirmDiscard = () => {
@@ -85,6 +88,34 @@ function App() {
 
     localStorage.setItem('savedMarkdown', JSON.stringify(savedMarkdownObject));
     dispatch(removeModal('overwrite'));
+    window.dispatchEvent(new Event('storage'));
+  };
+
+  const confirmSwitch = () => {
+    const targetDocumentTitle = targetSwitch;
+    const savedMarkdown = localStorage.getItem('savedMarkdown');
+    if (!savedMarkdown || !targetDocumentTitle) return;
+
+    const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+
+    if (!savedMarkdownObject[targetDocumentTitle]) {
+      console.log(
+        'the document was able to be selected, but cannot be reached for some reason'
+      );
+      dispatch(removeTargetDoc());
+      dispatch(removeModal('switch'));
+      // here we need to bring up the error modal
+      return;
+    } else {
+      dispatch(
+        changeDocument(
+          targetDocumentTitle,
+          savedMarkdownObject[targetDocumentTitle].documentMarkdown
+        )
+      );
+    }
+    dispatch(removeTargetDoc());
+    dispatch(removeModal('switch'));
   };
 
   return (
@@ -146,6 +177,28 @@ function App() {
             cancel
           </button>
           <button onClick={confirmDiscard}>confirm</button>
+        </Modal>
+      )}
+
+      {showSwitchModal && (
+        <Modal
+          title={
+            document?.isNewDocument ? 'Discard New Document' : 'Discard Changes'
+          }
+          message={
+            document?.isNewDocument
+              ? `Do you want to discard the current document ${
+                  document.currentDocumentTitle || ''
+                }?`
+              : `Do you want to discard the changes made to ${
+                  document?.currentDocumentTitle || ''
+                }?`
+          }
+        >
+          <button onClick={() => dispatch(removeModal('switch'))}>
+            Cancel
+          </button>
+          <button onClick={confirmSwitch}>Confirm</button>
         </Modal>
       )}
       <Menu showMenu={showMenu} />

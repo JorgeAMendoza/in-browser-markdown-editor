@@ -35,6 +35,8 @@ const documentContextSlice = createSlice({
         showDiscardSavedModal: false,
         showOverwriteModal: false,
         showTitleModal: false,
+        showSwitchModal: false,
+        targetSwitch: null,
       };
     },
     documentSaved(state) {
@@ -66,6 +68,10 @@ const documentContextSlice = createSlice({
           state.showTitleModal = true;
           break;
         }
+        case 'switch': {
+          state.showSwitchModal = true;
+          break;
+        }
         default:
           return state;
       }
@@ -93,9 +99,17 @@ const documentContextSlice = createSlice({
           state.showTitleModal = false;
           break;
         }
+        case 'switch': {
+          state.showSwitchModal = false;
+          break;
+        }
         default:
           return state;
       }
+      return state;
+    },
+    searchDoc(state, action: PayloadAction<string | null>) {
+      state.targetSwitch = action.payload;
       return state;
     },
   },
@@ -109,6 +123,7 @@ export const {
   documentSaved,
   hideModal,
   showModal,
+  searchDoc,
 } = documentContextSlice.actions;
 
 // On page load, intialize the context with the welcome markdown content, set the title as well
@@ -126,6 +141,8 @@ export const initializeWelcomeMarkdown = () => {
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(welcomeMarkdown));
   };
@@ -149,6 +166,8 @@ export const changeDocument = (
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(document));
   };
@@ -168,6 +187,8 @@ export const setNewDocument = () => {
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(newMarkdown));
   };
@@ -209,6 +230,18 @@ export const displayModal = (modalName: ModalTypes) => {
 export const removeModal = (modalName: ModalTypes) => {
   return (dispatch: AppDispatch) => {
     dispatch(hideModal(modalName));
+  };
+};
+
+export const applyTargetDoc = (documentTitle: string) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(searchDoc(documentTitle));
+  };
+};
+
+export const removeTargetDoc = () => {
+  return (dispatch: AppDispatch) => {
+    dispatch(searchDoc(null));
   };
 };
 

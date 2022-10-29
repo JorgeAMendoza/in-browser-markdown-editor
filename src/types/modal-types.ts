@@ -3,4 +3,5 @@ export type ModalTypes =
   | 'overwrite'
   | 'title'
   | 'discardNew'
-  | 'discardSaved';
+  | 'discardSaved'
+  | 'switch';

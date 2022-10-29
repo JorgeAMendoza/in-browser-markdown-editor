@@ -1,14 +1,60 @@
 import fileIcon from '../../../assets/icon-document.svg';
+import {
+  displayModal,
+  changeDocument,
+  applyTargetDoc,
+} from '../../../redux/document-reducer';
+import { SavedDocument } from '../../../types/saved-document';
+import { useAppDispatch, useAppSelector } from '../../../util/hooks';
 
-const DocumentListItem = () => {
+interface DocumentListItemProps {
+  documentDate: string;
+  documentTitle: string;
+}
+
+const DocumentListItem = ({
+  documentDate,
+  documentTitle,
+}: DocumentListItemProps) => {
+  const dispatch = useAppDispatch();
+  const { document } = useAppSelector((state) => state);
+  const switchDocument = () => {
+    const savedMarkdown = localStorage.getItem('savedMarkdown');
+    if (!savedMarkdown) {
+      console.log(
+        'this means that local storage was modified here, we need to create that error'
+      );
+      return;
+    }
+
+    if (!document) {
+      const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+      if (!savedMarkdownObject[documentTitle]) {
+        console.log('error again');
+        return;
+      }
+
+      dispatch(
+        changeDocument(
+          documentTitle,
+          savedMarkdownObject[documentTitle].documentMarkdown
+        )
+      );
+      return;
+    } else {
+      dispatch(applyTargetDoc(documentTitle));
+      dispatch(displayModal('switch'));
+    }
+  };
+
   return (
-    <li>
+    <li tabIndex={0} onClick={switchDocument}>
       <div>
         <img src={fileIcon} alt="file icon" />
       </div>
       <div>
-        <p>document</p>
-        <h4>document-name.md</h4>
+        <p>{documentDate}</p>
+        <h4>{documentTitle}</h4>
       </div>
     </li>
   );

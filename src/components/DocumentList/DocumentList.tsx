@@ -1,11 +1,44 @@
+import { useEffect, useState } from 'react';
 import DocumentListItem from './DocumentListItem/DocumentListItem';
+import { SavedDocument } from '../../types/saved-document';
 
 const DocumentList = () => {
+  const [docList, setDocList] = useState<SavedDocument>({});
+
+  useEffect(() => {
+    const checkLocalStorage = () => {
+      const savedMarkdown = localStorage.getItem('savedMarkdown');
+      if (savedMarkdown) {
+        const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+        setDocList(savedMarkdownObject);
+      }
+    };
+
+    checkLocalStorage();
+
+    window.addEventListener('storage', checkLocalStorage);
+
+    return () => {
+      window.removeEventListener('storage', checkLocalStorage);
+    };
+  }, []);
+
+  if (Object.keys(docList).length === 0)
+    return (
+      <div>
+        <p>No Documents</p>
+      </div>
+    );
+
   return (
     <ul data-testid="documentList">
-      {/* Here we use a map function to go over all the files in the local storage */}
-      <DocumentListItem />
-      <DocumentListItem />
+      {Object.keys(docList).map((doc) => (
+        <DocumentListItem
+          key={doc}
+          documentDate={docList[doc].date}
+          documentTitle={doc}
+        />
+      ))}
     </ul>
   );
 };
