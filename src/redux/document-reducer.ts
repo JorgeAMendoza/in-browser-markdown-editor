@@ -35,6 +35,7 @@ const documentContextSlice = createSlice({
         showDiscardSavedModal: false,
         showOverwriteModal: false,
         showTitleModal: false,
+        showSwitchModal: false,
       };
     },
     documentSaved(state) {
@@ -66,6 +67,10 @@ const documentContextSlice = createSlice({
           state.showTitleModal = true;
           break;
         }
+        case 'switch': {
+          state.showSwitchModal = true;
+          break;
+        }
         default:
           return state;
       }
@@ -91,6 +96,10 @@ const documentContextSlice = createSlice({
         }
         case 'title': {
           state.showTitleModal = false;
+          break;
+        }
+        case 'switch': {
+          state.showSwitchModal = false;
           break;
         }
         default:
@@ -126,6 +135,7 @@ export const initializeWelcomeMarkdown = () => {
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
     };
     dispatch(setMarkdownInformation(welcomeMarkdown));
   };
@@ -149,6 +159,7 @@ export const changeDocument = (
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
     };
     dispatch(setMarkdownInformation(document));
   };
@@ -168,6 +179,7 @@ export const setNewDocument = () => {
       showDiscardSavedModal: false,
       showOverwriteModal: false,
       showTitleModal: false,
+      showSwitchModal: false,
     };
     dispatch(setMarkdownInformation(newMarkdown));
   };

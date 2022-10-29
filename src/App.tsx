@@ -24,6 +24,7 @@ function App() {
     showDiscardNewModal,
     showDiscardSavedModal,
     showOverwriteModal,
+    showSwitchModal,
     document,
   } = useAppSelector((state) => state);
   useEffect(() => {
@@ -146,6 +147,28 @@ function App() {
             cancel
           </button>
           <button onClick={confirmDiscard}>confirm</button>
+        </Modal>
+      )}
+
+      {showSwitchModal && (
+        <Modal
+          title={
+            document?.isNewDocument ? 'Discard New Document' : 'Discard Changes'
+          }
+          message={
+            document?.isNewDocument
+              ? `Do you want to discard the current document ${
+                  document.currentDocumentTitle || ''
+                }?`
+              : `Do you want to discard the changes made to ${
+                  document?.currentDocumentTitle || ''
+                }?`
+          }
+        >
+          <button onClick={() => dispatch(removeModal('switch'))}>
+            Cancel
+          </button>
+          <button>Confirm</button>
         </Modal>
       )}
       <Menu showMenu={showMenu} />

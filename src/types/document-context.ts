@@ -11,6 +11,7 @@ interface DocumentContext {
   showDiscardSavedModal: boolean;
   showOverwriteModal: boolean;
   showTitleModal: boolean;
+  showSwitchModal: boolean;
   document: DocumentInfo | null;
 }
 
