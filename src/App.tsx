@@ -32,10 +32,8 @@ function App() {
 
   const confirmDelete = () => {
     if (!document) return;
-    console.log('document being deleted');
 
     if (document.isNewDocument) {
-      console.log('new document being deleted');
       dispatch(deleteDocument());
       return;
     }
@@ -53,6 +51,7 @@ function App() {
 
     dispatch(removeModal('delete'));
     dispatch(deleteDocument());
+    window.dispatchEvent(new Event('storage'));
   };
 
   const confirmDiscard = () => {
@@ -85,6 +84,7 @@ function App() {
 
     localStorage.setItem('savedMarkdown', JSON.stringify(savedMarkdownObject));
     dispatch(removeModal('overwrite'));
+    window.dispatchEvent(new Event('storage'));
   };
 
   return (

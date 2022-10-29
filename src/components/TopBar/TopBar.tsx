@@ -51,6 +51,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
         })
       );
       dispatch(saveDocumentInformation());
+      window.dispatchEvent(new Event('storage'));
     } else if (document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
       if (document.currentDocumentTitle in savedDocumentsObject)
@@ -66,6 +67,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
           JSON.stringify(savedDocumentsObject)
         );
         dispatch(saveDocumentInformation());
+        window.dispatchEvent(new Event('storage'));
       }
     } else if (!document.isNewDocument) {
       const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
@@ -79,6 +81,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
           JSON.stringify(savedDocumentsObject)
         );
         dispatch(saveDocumentInformation);
+        window.dispatchEvent(new Event('storage'));
       } else {
         if (!(document.currentDocumentTitle in savedDocumentsObject)) {
           savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
@@ -91,6 +94,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             JSON.stringify(savedDocumentsObject)
           );
           dispatch(saveDocumentInformation());
+          window.dispatchEvent(new Event('storage'));
         } else {
           dispatch(displayModal('overwrite'));
         }
@@ -98,9 +102,6 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
     }
   };
 
-  const deleteDocument = () => {
-    dispatch(displayModal('delete'));
-  };
   return (
     <TopBarStyled>
       <div>
@@ -152,7 +153,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       </div>
 
       <div>
-        <button disabled={disableAction} onClick={deleteDocument}>
+        <button
+          disabled={disableAction}
+          onClick={() => dispatch(displayModal('delete'))}
+        >
           <img src={deleteIcon} alt="Click to delete the document" />
         </button>
         <button

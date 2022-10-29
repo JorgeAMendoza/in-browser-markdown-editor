@@ -6,12 +6,10 @@ const DocumentList = () => {
   const [docList, setDocList] = useState<SavedDocument>({});
 
   useEffect(() => {
-    console.log('firing effect');
     const checkLocalStorage = () => {
       const savedMarkdown = localStorage.getItem('savedMarkdown');
       if (savedMarkdown) {
         const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
-        console.log(savedMarkdownObject);
         setDocList(savedMarkdownObject);
       }
     };
