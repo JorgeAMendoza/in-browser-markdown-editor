@@ -7,6 +7,7 @@ import {
   deleteDocument,
   setNewDocument,
   saveDocumentInformation,
+  removeTargetDoc,
 } from './redux/document-reducer';
 import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
@@ -25,6 +26,7 @@ function App() {
     showDiscardSavedModal,
     showOverwriteModal,
     showSwitchModal,
+    targetSwitch,
     document,
   } = useAppSelector((state) => state);
   useEffect(() => {
@@ -86,6 +88,12 @@ function App() {
     localStorage.setItem('savedMarkdown', JSON.stringify(savedMarkdownObject));
     dispatch(removeModal('overwrite'));
     window.dispatchEvent(new Event('storage'));
+  };
+
+  const confirmSwitch = () => {
+    console.log(targetSwitch);
+    dispatch(removeTargetDoc());
+    dispatch(removeModal('switch'));
   };
 
   return (
@@ -168,7 +176,7 @@ function App() {
           <button onClick={() => dispatch(removeModal('switch'))}>
             Cancel
           </button>
-          <button>Confirm</button>
+          <button onClick={confirmSwitch}>Confirm</button>
         </Modal>
       )}
       <Menu showMenu={showMenu} />

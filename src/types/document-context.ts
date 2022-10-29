@@ -12,6 +12,7 @@ interface DocumentContext {
   showOverwriteModal: boolean;
   showTitleModal: boolean;
   showSwitchModal: boolean;
+  targetSwitch: string | null
   document: DocumentInfo | null;
 }
 

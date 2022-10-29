@@ -1,6 +1,11 @@
 import fileIcon from '../../../assets/icon-document.svg';
-import { displayModal } from '../../../redux/document-reducer';
-import { useAppDispatch } from '../../../util/hooks';
+import {
+  displayModal,
+  changeDocument,
+  applyTargetDoc,
+} from '../../../redux/document-reducer';
+import { SavedDocument } from '../../../types/saved-document';
+import { useAppDispatch, useAppSelector } from '../../../util/hooks';
 
 interface DocumentListItemProps {
   documentDate: string;
@@ -12,8 +17,34 @@ const DocumentListItem = ({
   documentTitle,
 }: DocumentListItemProps) => {
   const dispatch = useAppDispatch();
+  const { document } = useAppSelector((state) => state);
   const switchDocument = () => {
-    dispatch(displayModal('switch'));
+    const savedMarkdown = localStorage.getItem('savedMarkdown');
+    if (!savedMarkdown) {
+      console.log(
+        'this means that local storage was modified here, we need to create that error'
+      );
+      return;
+    }
+
+    if (!document) {
+      const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
+      if (!savedMarkdownObject[documentTitle]) {
+        console.log('error again');
+        return;
+      }
+
+      dispatch(
+        changeDocument(
+          documentTitle,
+          savedMarkdownObject[documentTitle].documentMarkdown
+        )
+      );
+      return;
+    } else {
+      dispatch(applyTargetDoc(documentTitle));
+      dispatch(displayModal('switch'));
+    }
   };
 
   return (

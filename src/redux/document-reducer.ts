@@ -36,6 +36,7 @@ const documentContextSlice = createSlice({
         showOverwriteModal: false,
         showTitleModal: false,
         showSwitchModal: false,
+        targetSwitch: null,
       };
     },
     documentSaved(state) {
@@ -107,6 +108,10 @@ const documentContextSlice = createSlice({
       }
       return state;
     },
+    searchDoc(state, action: PayloadAction<string | null>) {
+      state.targetSwitch = action.payload;
+      return state;
+    },
   },
 });
 
@@ -118,6 +123,7 @@ export const {
   documentSaved,
   hideModal,
   showModal,
+  searchDoc,
 } = documentContextSlice.actions;
 
 // On page load, intialize the context with the welcome markdown content, set the title as well
@@ -136,6 +142,7 @@ export const initializeWelcomeMarkdown = () => {
       showOverwriteModal: false,
       showTitleModal: false,
       showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(welcomeMarkdown));
   };
@@ -160,6 +167,7 @@ export const changeDocument = (
       showOverwriteModal: false,
       showTitleModal: false,
       showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(document));
   };
@@ -180,6 +188,7 @@ export const setNewDocument = () => {
       showOverwriteModal: false,
       showTitleModal: false,
       showSwitchModal: false,
+      targetSwitch: null,
     };
     dispatch(setMarkdownInformation(newMarkdown));
   };
@@ -221,6 +230,18 @@ export const displayModal = (modalName: ModalTypes) => {
 export const removeModal = (modalName: ModalTypes) => {
   return (dispatch: AppDispatch) => {
     dispatch(hideModal(modalName));
+  };
+};
+
+export const applyTargetDoc = (documentTitle: string) => {
+  return (dispatch: AppDispatch) => {
+    dispatch(searchDoc(documentTitle));
+  };
+};
+
+export const removeTargetDoc = () => {
+  return (dispatch: AppDispatch) => {
+    dispatch(searchDoc(null));
   };
 };
 
