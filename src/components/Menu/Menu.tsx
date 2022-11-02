@@ -6,9 +6,11 @@ import { displayModal, setNewDocument } from '../../redux/document-reducer';
 
 interface MenuProps {
   showMenu: boolean;
+  setTheme: React.Dispatch<'light' | 'dark'>;
+  theme: 'light' | 'dark';
 }
 
-const Menu = ({ showMenu }: MenuProps) => {
+const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -25,7 +27,7 @@ const Menu = ({ showMenu }: MenuProps) => {
       </button>
 
       <DocumentList />
-      <ThemeToggle />
+      <ThemeToggle setTheme={setTheme} theme={theme} />
     </MenuStyled>
   );
 };
