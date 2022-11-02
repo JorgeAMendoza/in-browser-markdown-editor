@@ -18,6 +18,7 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 1.6rem;
     min-height: 100vh;
     position:relative;
+    background-color: ${({ theme }) => theme.background};
   } 
   img,svg {
     max-width: 100%;
