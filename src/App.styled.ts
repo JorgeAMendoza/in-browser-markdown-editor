@@ -19,7 +19,7 @@ const AppStyled = styled.div<AppStyledProps>`
     transform: ${({ menuVisible }) =>
       menuVisible ? 'translateX(23rem)' : 'translateX(0)'};
     transition: transform 0.2s ease-in;
-    min-width: 99vw;
+    min-width: 100vw;
     height: 100%;
   }
 `;

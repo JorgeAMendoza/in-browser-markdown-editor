@@ -1,14 +1,19 @@
+import showPreviewIcon from '../../../assets/icon-show-preview.svg';
 import { useAppDispatch, useAppSelector } from '../../../util/hooks';
 import { updateMarkdown } from '../../../redux/document-reducer';
+import MarkdownTextAreaStyled from './MarkdownTextArea.styled';
 
 const MarkdownTextArea = () => {
   const documentState = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   return (
-    <section>
+    <MarkdownTextAreaStyled>
       <div>
         <h1>markdown</h1>
+        <button>
+          <img src={showPreviewIcon} />
+        </button>
       </div>
       <div>
         <textarea
@@ -33,7 +38,7 @@ const MarkdownTextArea = () => {
           }}
         />
       </div>
-    </section>
+    </MarkdownTextAreaStyled>
   );
 };
 
