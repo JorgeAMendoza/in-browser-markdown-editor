@@ -12,7 +12,7 @@ import {
   saveDocumentInformation,
   displayModal,
 } from '../../redux/document-reducer';
-import TopBarStyled from './TopBar.styled';
+import TopBarStyled, { DocumentName } from './TopBar.styled';
 import createSaveDate from '../../util/creat-save-date';
 
 interface TopBarProps {
@@ -129,7 +129,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
           <img src={logoIcon} alt="Logo Icon" />
         </div>
 
-        <div>
+        <DocumentName>
           <div>
             <img src={documentIcon} alt="Document icon" />
           </div>
@@ -149,7 +149,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
               />
             </div>
           )}
-        </div>
+        </DocumentName>
       </div>
 
       <div>

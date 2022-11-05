@@ -4,8 +4,18 @@ import device from '../../../util/device-breakpoints';
 const MarkdownTextAreaStyled = styled.section`
   flex: 1;
 
+  textarea {
+    vertical-align: top;
+    width: 100%;
+    height: 92vh;
+    display: inline-block;
+    padding: 1em;
+    padding-bottom: 3em;
+    resize: none;
+    border: none;
+  }
+
   div:nth-of-type(1) {
-    border: 1px solid black;
     display: flex;
     justify-content: space-between;
 
