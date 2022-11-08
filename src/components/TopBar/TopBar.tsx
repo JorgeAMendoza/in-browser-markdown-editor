@@ -12,7 +12,13 @@ import {
   saveDocumentInformation,
   displayModal,
 } from '../../redux/document-reducer';
-import TopBarStyled, { DocumentName } from './TopBar.styled';
+import TopBarStyled, {
+  DocOptions,
+  DocumentName,
+  MarkdownLogo,
+  MenuButton,
+  SaveButton,
+} from './TopBar.styled';
 import createSaveDate from '../../util/creat-save-date';
 
 interface TopBarProps {
@@ -106,7 +112,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
     <TopBarStyled>
       <div>
         <div>
-          <button
+          <MenuButton
             data-testid="menuButton"
             onClick={() => {
               if (showMenu) setShowMenu(false);
@@ -122,18 +128,18 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             ) : (
               <img src={menuIcon} alt="Menu Icon" aria-label="Open the menu" />
             )}
-          </button>
+          </MenuButton>
         </div>
 
-        <div>
+        <MarkdownLogo>
           <img src={logoIcon} alt="Logo Icon" />
-        </div>
+        </MarkdownLogo>
 
-        <DocumentName>
-          <div>
-            <img src={documentIcon} alt="Document icon" />
-          </div>
-          {!document ? null : (
+        {!document ? null : (
+          <DocumentName>
+            <div>
+              <img src={documentIcon} alt="Document icon" />
+            </div>
             <div>
               <p>document name</p>
               <input
@@ -148,28 +154,29 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
                 }
               />
             </div>
-          )}
-        </DocumentName>
+          </DocumentName>
+        )}
+        
       </div>
 
-      <div>
+      <DocOptions>
         <button
           disabled={disableAction}
           onClick={() => dispatch(displayModal('delete'))}
         >
           <img src={deleteIcon} alt="Click to delete the document" />
         </button>
-        <button
+        <SaveButton
           disabled={disableAction}
           data-testid="saveDocumentButton"
           onClick={() => saveDocument()}
         >
           <div>
             <img src={saveIcon} alt="Save the document" />
-            <p>save changes</p>
           </div>
-        </button>
-      </div>
+          <p>save changes</p>
+        </SaveButton>
+      </DocOptions>
     </TopBarStyled>
   );
 };

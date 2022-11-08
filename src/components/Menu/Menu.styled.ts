@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import device from '../../util/device-breakpoints';
 
 interface MenuStyledProps {
   menuVisible: boolean;
@@ -30,7 +31,7 @@ const MenuStyled = styled.section<MenuStyledProps>`
   position: fixed;
   top: 0;
   left: 0;
-  padding: 0.9em;
+  padding: 1.2em;
   transition: transform 0.2s ease-in;
   min-width: 23rem;
   transform: translateX(-23rem);
@@ -45,6 +46,12 @@ const MenuStyled = styled.section<MenuStyledProps>`
   animation-name: ${({ menuVisible }) => (menuVisible ? slideIn : slideOut)};
   animation-duration: 0.25s;
   animation-fill-mode: forwards;
+`;
+
+export const MenuLogo = styled.div`
+  @media screen and ${device.tablet} {
+    display: none;
+  }
 `;
 
 export default MenuStyled;
