@@ -18,7 +18,7 @@ const TopBarStyled = styled.header`
     justify-content: space-between;
     gap: 2.5rem;
 
-    @media screen and ${device.tablet} {
+    @media screen and ${device.laptop} {
       gap: 5rem;
     }
   }
@@ -31,7 +31,7 @@ export const MenuButton = styled.button`
 export const MarkdownLogo = styled.div`
   display: none;
 
-  @media screen and ${device.tablet} {
+  @media screen and ${device.laptop} {
     display: inline-block;
   }
 `;

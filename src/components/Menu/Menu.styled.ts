@@ -49,7 +49,7 @@ const MenuStyled = styled.section<MenuStyledProps>`
 `;
 
 export const MenuLogo = styled.div`
-  @media screen and ${device.tablet} {
+  @media screen and ${device.laptop} {
     display: none;
   }
 `;
