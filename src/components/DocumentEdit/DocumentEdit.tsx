@@ -10,11 +10,14 @@ const DocumentEdit = () => {
 
   // if null, eventually return component that renders message.
   return (
-    <DocumentEditStyled>
+    <DocumentEditStyled data-fullpreview={showPreview}>
       {document ? (
         <>
           <MarkdownTextArea />
-          <PreviewTextArea />
+          <PreviewTextArea
+            showPreview={showPreview}
+            setShowPreview={setShowPreview}
+          />
         </>
       ) : (
         <p>Open a saved document or create a new document!</p>
