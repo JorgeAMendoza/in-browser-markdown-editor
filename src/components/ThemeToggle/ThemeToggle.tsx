@@ -1,5 +1,6 @@
 import darkIcon from '../../assets/icon-dark-mode.svg';
 import lightIcon from '../../assets/icon-light-mode.svg';
+import ThemeToggleStyled from './ThemeToggle.styled';
 
 interface ThemeToggleProps {
   setTheme: React.Dispatch<'light' | 'dark'>;
@@ -13,7 +14,7 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
     console.log('changing theme');
   };
   return (
-    <div>
+    <ThemeToggleStyled>
       <div>
         <img src={darkIcon} alt="dark icon theme toggle" />
       </div>
@@ -27,7 +28,7 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
       <div>
         <img src={lightIcon} alt="light icon theme toggle" />
       </div>
-    </div>
+    </ThemeToggleStyled>
   );
 };
 

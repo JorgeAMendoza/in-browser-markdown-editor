@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import DocumentListItem from './DocumentListItem/DocumentListItem';
 import { SavedDocument } from '../../types/saved-document';
+import DocumentListStyled from './DocumentList.styled';
 
 const DocumentList = () => {
   const [docList, setDocList] = useState<SavedDocument>({});
@@ -31,7 +32,7 @@ const DocumentList = () => {
     );
 
   return (
-    <ul data-testid="documentList">
+    <DocumentListStyled data-testid="documentList">
       {Object.keys(docList).map((doc) => (
         <DocumentListItem
           key={doc}
@@ -39,7 +40,7 @@ const DocumentList = () => {
           documentTitle={doc}
         />
       ))}
-    </ul>
+    </DocumentListStyled>
   );
 };
 

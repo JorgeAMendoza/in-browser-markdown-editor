@@ -1,23 +1,31 @@
 import markdownIt from 'markdown-it';
-import resizeIcon from '../../../assets/icon-resize.svg';
+import showPreviewIcon from '../../../assets/icon-show-preview.svg';
 import ReactHtmlParser from 'react-html-parser';
 import { useAppSelector } from '../../../util/hooks';
+import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
+
+interface PreviewTextAreaProps {
+  adjustPreview: () => void;
+}
 
 const md = new markdownIt();
 
-const PreviewTextArea = () => {
+const PreviewTextArea = ({ adjustPreview }: PreviewTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
   const html = md.render(documentState.document?.documentMarkdown || '');
+
   return (
-    <section>
+    <PreviewTextAreaStyled>
       <div>
         <h1>preview</h1>
-        <div>
-          <img src={resizeIcon} />
-        </div>
+        <button onClick={adjustPreview}>
+          <img src={showPreviewIcon} />
+        </button>
       </div>
-      <div data-testid="previewTextArea">{ReactHtmlParser(html)}</div>
-    </section>
+      <PreviewText data-testid="previewTextArea">
+        {ReactHtmlParser(html)}
+      </PreviewText>
+    </PreviewTextAreaStyled>
   );
 };
 

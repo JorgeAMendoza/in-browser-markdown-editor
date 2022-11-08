@@ -1,18 +1,24 @@
+import { useState } from 'react';
 import { useAppSelector } from '../../util/hooks';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 import DocumentEditStyled from './DocumentEdit.styled';
 
 const DocumentEdit = () => {
+  const [showPreview, setShowPreview] = useState(false);
   const { document } = useAppSelector((state) => state);
 
-  // if null, eventually return component that renders message.
+  const adjustPreview = () => {
+    if (showPreview) setShowPreview(false);
+    else setShowPreview(true);
+  };
+
   return (
-    <DocumentEditStyled>
+    <DocumentEditStyled data-fullpreview={showPreview}>
       {document ? (
         <>
-          <MarkdownTextArea />
-          <PreviewTextArea />
+          <MarkdownTextArea adjustPreview={adjustPreview} />
+          <PreviewTextArea adjustPreview={adjustPreview} />
         </>
       ) : (
         <p>Open a saved document or create a new document!</p>
