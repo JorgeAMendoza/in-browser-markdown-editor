@@ -3,7 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../../util/hooks';
 import { updateMarkdown } from '../../../redux/document-reducer';
 import MarkdownTextAreaStyled from './MarkdownTextArea.styled';
 
-const MarkdownTextArea = () => {
+interface MarkdownTextAreaProps {
+  adjustPreview: () => void;
+}
+
+const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -11,7 +15,7 @@ const MarkdownTextArea = () => {
     <MarkdownTextAreaStyled>
       <div>
         <h1>markdown</h1>
-        <button>
+        <button onClick={adjustPreview}>
           <img src={showPreviewIcon} />
         </button>
       </div>

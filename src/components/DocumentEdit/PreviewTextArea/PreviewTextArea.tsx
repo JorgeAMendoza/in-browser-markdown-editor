@@ -5,23 +5,14 @@ import { useAppSelector } from '../../../util/hooks';
 import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
 
 interface PreviewTextAreaProps {
-  showPreview: boolean;
-  setShowPreview: React.Dispatch<boolean>;
+  adjustPreview: () => void;
 }
 
 const md = new markdownIt();
 
-const PreviewTextArea = ({
-  showPreview,
-  setShowPreview,
-}: PreviewTextAreaProps) => {
+const PreviewTextArea = ({ adjustPreview }: PreviewTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
   const html = md.render(documentState.document?.documentMarkdown || '');
-
-  const adjustPreview = () => {
-    if (showPreview) setShowPreview(false);
-    else setShowPreview(true);
-  };
 
   return (
     <PreviewTextAreaStyled>
