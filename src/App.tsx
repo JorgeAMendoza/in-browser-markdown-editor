@@ -36,6 +36,12 @@ function App() {
   } = useAppSelector((state) => state);
   useEffect(() => {
     dispatch(initializeWelcomeMarkdown());
+    if (
+      window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+    ) {
+      setTheme('dark');
+    } else setTheme('light');
   }, []);
 
   const confirmDelete = () => {

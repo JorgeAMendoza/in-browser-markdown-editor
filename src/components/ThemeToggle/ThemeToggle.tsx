@@ -6,7 +6,6 @@ interface ThemeToggleProps {
   setTheme: React.Dispatch<'light' | 'dark'>;
   theme: 'light' | 'dark';
 }
-// I AM THE MASTER CHIEF
 
 const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
   const toggleTheme = () => {
