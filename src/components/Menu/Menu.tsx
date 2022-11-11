@@ -1,6 +1,6 @@
 import DocumentList from '../DocumentList/DocumentList';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
-import MenuStyled, { MenuLogo } from './Menu.styled';
+import MenuStyled, { MenuDocButton, MenuLogo, MenuTitle } from './Menu.styled';
 import MarkdownLogo from '../../assets/logo.svg';
 import { useAppDispatch, useAppSelector } from '../../util/hooks';
 import { displayModal, setNewDocument } from '../../redux/document-reducer';
@@ -25,10 +25,13 @@ const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
       <MenuLogo>
         <img src={MarkdownLogo} alt="Markdown logo" />
       </MenuLogo>
-      <h2>my documents</h2>
-      <button onClick={newDocumentToggle} data-testid="newDocumentButton">
+      <MenuTitle>my documents</MenuTitle>
+      <MenuDocButton
+        onClick={newDocumentToggle}
+        data-testid="newDocumentButton"
+      >
         + new document
-      </button>
+      </MenuDocButton>
 
       <DocumentList />
       <ThemeToggle setTheme={setTheme} theme={theme} />
