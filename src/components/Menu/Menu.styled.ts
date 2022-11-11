@@ -40,7 +40,7 @@ const MenuStyled = styled.section<MenuStyledProps>`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background-color: #2b2d31;
+  background-color: #1d1f22;
   color: white;
   overflow-y: auto;
 

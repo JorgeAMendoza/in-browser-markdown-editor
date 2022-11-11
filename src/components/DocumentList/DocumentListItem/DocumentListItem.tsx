@@ -6,7 +6,9 @@ import {
 } from '../../../redux/document-reducer';
 import { SavedDocument } from '../../../types/saved-document';
 import { useAppDispatch, useAppSelector } from '../../../util/hooks';
-import DocumentListItemStyled from './DocumentListItem.styled';
+import DocumentListItemStyled, {
+  ListItemInfo,
+} from './DocumentListItem.styled';
 
 interface DocumentListItemProps {
   documentDate: string;
@@ -53,10 +55,10 @@ const DocumentListItem = ({
       <div>
         <img src={fileIcon} alt="file icon" />
       </div>
-      <div>
+      <ListItemInfo>
         <p>{documentDate}</p>
         <h4>{documentTitle}</h4>
-      </div>
+      </ListItemInfo>
     </DocumentListItemStyled>
   );
 };
