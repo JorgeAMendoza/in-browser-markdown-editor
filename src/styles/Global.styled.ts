@@ -14,7 +14,7 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.4;
   }
   body{
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Roboto Slab', serif;
     font-size: 1.6rem;
     min-height: 100vh;
     position:relative;
