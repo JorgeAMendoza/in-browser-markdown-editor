@@ -1,11 +1,12 @@
 import darkIcon from '../../assets/icon-dark-mode.svg';
 import lightIcon from '../../assets/icon-light-mode.svg';
-import ThemeToggleStyled from './ThemeToggle.styled';
+import ThemeToggleStyled, { Toggle } from './ThemeToggle.styled';
 
 interface ThemeToggleProps {
   setTheme: React.Dispatch<'light' | 'dark'>;
   theme: 'light' | 'dark';
 }
+// I AM THE MASTER CHIEF
 
 const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
   const toggleTheme = () => {
@@ -19,11 +20,12 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
         <img src={darkIcon} alt="dark icon theme toggle" />
       </div>
       <div data-theme={theme}>
-        <button
+        <Toggle
           onClick={toggleTheme}
           aria-label={`toggle theme to ${theme === 'dark' ? 'light' : 'dark'}`}
           style={{ width: '50px', height: '50px' }}
-        ></button>
+          data-toggle={theme}
+        ></Toggle>
       </div>
       <div>
         <img src={lightIcon} alt="light icon theme toggle" />
