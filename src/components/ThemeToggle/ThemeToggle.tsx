@@ -1,5 +1,7 @@
 import darkIcon from '../../assets/icon-dark-mode.svg';
 import lightIcon from '../../assets/icon-light-mode.svg';
+import lightIconActive from '../../assets/icon-light-mode-active.svg';
+import darkIconActive from '../../assets/icon-dark-mode-active.svg';
 import ThemeToggleStyled, { Toggle } from './ThemeToggle.styled';
 
 interface ThemeToggleProps {
@@ -16,7 +18,10 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
   return (
     <ThemeToggleStyled>
       <div>
-        <img src={darkIcon} alt="dark icon theme toggle" />
+        <img
+          src={theme === 'dark' ? darkIconActive : darkIcon}
+          alt="dark icon theme toggle"
+        />
       </div>
       <div data-theme={theme}>
         <Toggle
@@ -27,7 +32,10 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
         ></Toggle>
       </div>
       <div>
-        <img src={lightIcon} alt="light icon theme toggle" />
+        <img
+          src={theme === 'light' ? lightIconActive : lightIcon}
+          alt="light icon theme toggle"
+        />
       </div>
     </ThemeToggleStyled>
   );
