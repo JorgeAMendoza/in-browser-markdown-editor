@@ -32,10 +32,9 @@ const MenuStyled = styled.section<MenuStyledProps>`
   position: fixed;
   top: 0;
   left: 0;
-  padding: 2em 1.2em;
-  transition: transform 0.2s ease-in;
-  min-width: 23rem;
   transform: translateX(-23rem);
+  padding: 2em 1.2em;
+  min-width: 23rem;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -43,10 +42,12 @@ const MenuStyled = styled.section<MenuStyledProps>`
   background-color: #1d1f22;
   color: white;
   overflow-y: auto;
+  opacity: ${({ menuVisible }) => (menuVisible ? '1' : '0')};
+  /* come back and maybe use another state to make this only happen once, on load? */
 
   animation-name: ${({ menuVisible }) => (menuVisible ? slideIn : slideOut)};
-  animation-duration: 0.25s;
-  animation-fill-mode: forwards;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
 `;
 
 export const MenuTitle = styled.h2`

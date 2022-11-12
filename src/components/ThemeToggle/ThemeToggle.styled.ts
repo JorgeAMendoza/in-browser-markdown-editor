@@ -38,6 +38,7 @@ export const Toggle = styled.button`
     z-index: 1;
     border-radius: 50%;
     transition: transform 0.15s ease-in;
+    /* transition for theme toggle */
   }
 `;
 
