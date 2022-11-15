@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import device from '../../util/device-breakpoints';
+import { Button } from '../../styles/utils/Button.styled';
 
 const TopBarStyled = styled.header`
   grid-area: topBar;
   overflow: hidden;
   background-color: #2b2d31;
   color: white;
-  padding: 1rem 0;
-  min-height: 5.5rem;
+  min-height: 5.6rem;
 
   display: flex;
   justify-content: space-between;
@@ -24,8 +24,21 @@ const TopBarStyled = styled.header`
   }
 `;
 
-export const MenuButton = styled.button`
-  border: 1px solid yellow;
+export const MenuButton = styled.div`
+  height: 100%;
+  padding: 0;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 5.5rem;
+  background-color: #35393f;
+
+  button {
+    background: none;
+    border: none;
+    width: 2.5rem;
+  }
 `;
 
 export const MarkdownLogo = styled.div`
@@ -41,6 +54,10 @@ export const DocumentName = styled.div`
   align-items: center;
   gap: 1.5rem;
 
+  div > img {
+    min-width: 1.5rem;
+  }
+
   div > p {
     display: none;
 
@@ -48,16 +65,30 @@ export const DocumentName = styled.div`
       display: block;
     }
   }
+
+  div > input {
+    font-family: 'Roboto';
+    background: none;
+    color: white;
+    font-weight: 400;
+    font-size: 1.5rem;
+  }
 `;
 
 export const DocOptions = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-right: 1rem;
 `;
 
-export const SaveButton = styled.button`
+export const SaveButton = styled(Button)`
+  min-width: 4rem;
+  min-height: 4rem;
+  border-radius: 4px;
   display: flex;
+  align-items: center;
+  gap: 1rem;
   p {
     display: none;
   }
@@ -67,4 +98,11 @@ export const SaveButton = styled.button`
     }
   }
 `;
+
+export const DeleteButton = styled(Button)`
+  background: none;
+  display: flex;
+  justify-content: center;
+`;
+
 export default TopBarStyled;

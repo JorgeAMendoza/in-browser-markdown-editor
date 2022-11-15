@@ -18,6 +18,7 @@ import TopBarStyled, {
   MarkdownLogo,
   MenuButton,
   SaveButton,
+  DeleteButton,
 } from './TopBar.styled';
 import createSaveDate from '../../util/creat-save-date';
 
@@ -111,8 +112,8 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
   return (
     <TopBarStyled>
       <div>
-        <div>
-          <MenuButton
+        <MenuButton>
+          <button
             data-testid="menuButton"
             onClick={() => {
               if (showMenu) setShowMenu(false);
@@ -128,8 +129,8 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             ) : (
               <img src={menuIcon} alt="Menu Icon" aria-label="Open the menu" />
             )}
-          </MenuButton>
-        </div>
+          </button>
+        </MenuButton>
 
         <MarkdownLogo>
           <img src={logoIcon} alt="Logo Icon" />
@@ -156,16 +157,15 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             </div>
           </DocumentName>
         )}
-        
       </div>
 
       <DocOptions>
-        <button
+        <DeleteButton
           disabled={disableAction}
           onClick={() => dispatch(displayModal('delete'))}
         >
           <img src={deleteIcon} alt="Click to delete the document" />
-        </button>
+        </DeleteButton>
         <SaveButton
           disabled={disableAction}
           data-testid="saveDocumentButton"
