@@ -61,7 +61,7 @@ export const MarkdownLogo = styled.div`
       position: absolute;
       top: 50%;
       right: 0;
-      transform: translateX(115%) rotate(90deg) ;
+      transform: translateX(115%) rotate(90deg);
     }
   }
 `;
@@ -111,6 +111,11 @@ export const SaveButton = styled(Button)`
   display: flex;
   align-items: center;
   gap: 1rem;
+
+  img {
+    min-width: 1.6rem;
+  }
+
   p {
     display: none;
     text-transform: capitalize;
