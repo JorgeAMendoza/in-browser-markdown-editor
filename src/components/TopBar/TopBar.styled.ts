@@ -9,6 +9,10 @@ const TopBarStyled = styled.header`
   color: white;
   min-height: 5.6rem;
 
+  @media screen and ${device.tablet} {
+    min-height: 7rem;
+  }
+
   display: flex;
   justify-content: space-between;
 
@@ -19,7 +23,7 @@ const TopBarStyled = styled.header`
     gap: 2.5rem;
 
     @media screen and ${device.laptop} {
-      gap: 5rem;
+      /* gap: 3rem; */
     }
   }
 `;
@@ -46,6 +50,19 @@ export const MarkdownLogo = styled.div`
 
   @media screen and ${device.laptop} {
     display: inline-block;
+    margin-right: 4rem;
+    position: relative;
+
+    &::after {
+      content: '';
+      height: 0.1rem;
+      width: 5rem;
+      background-color: #5a6069;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateX(115%) rotate(90deg) ;
+    }
   }
 `;
 
@@ -60,6 +77,11 @@ export const DocumentName = styled.div`
 
   div > p {
     display: none;
+    font-weight: 300;
+    font-family: 'Roboto';
+    color: #7c8187;
+    text-transform: capitalize;
+    font-size: 1.5rem;
 
     @media screen and ${device.tablet} {
       display: block;
@@ -91,6 +113,7 @@ export const SaveButton = styled(Button)`
   gap: 1rem;
   p {
     display: none;
+    text-transform: capitalize;
   }
   @media screen and ${device.tablet} {
     p {
