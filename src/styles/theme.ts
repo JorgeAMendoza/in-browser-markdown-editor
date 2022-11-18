@@ -3,6 +3,7 @@ interface ThemeObject {
   previewArea: {
     color: string;
     header: string;
+    background: string;
     codeBlock: {
       color: string;
       background: string;
@@ -10,6 +11,8 @@ interface ThemeObject {
   };
   markdownArea: {
     color: string;
+    header: string;
+    background: string;
   };
 }
 
@@ -18,6 +21,7 @@ export const lightTheme: ThemeObject = {
   previewArea: {
     color: '#7C8187',
     header: '#35393F',
+    background: '#FFF',
     codeBlock: {
       color: '#35393F',
       background: '#F5F5F5',
@@ -25,6 +29,8 @@ export const lightTheme: ThemeObject = {
   },
   markdownArea: {
     color: '#35393F',
+    header: '#35393F',
+    background: '#FFF',
   },
 };
 export const darkTheme: ThemeObject = {
@@ -32,6 +38,7 @@ export const darkTheme: ThemeObject = {
   previewArea: {
     color: '#C1C4CB',
     header: '#FFF',
+    background: '#FFF',
     codeBlock: {
       color: '#FFF',
       background: '#2B2D31',
@@ -39,5 +46,7 @@ export const darkTheme: ThemeObject = {
   },
   markdownArea: {
     color: '#C1C4CB',
+    background: '#151619',
+    header: '#1D1F22',
   },
 };

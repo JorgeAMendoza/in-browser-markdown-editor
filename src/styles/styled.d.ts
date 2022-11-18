@@ -15,6 +15,8 @@ declare module 'styled-components' {
     };
     markdownArea: {
       color: string;
+      header: string;
+      background: string;
     };
   }
 }
