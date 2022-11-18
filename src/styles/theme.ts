@@ -12,6 +12,7 @@ interface ThemeObject {
   markdownArea: {
     color: string;
     header: string;
+    headerColor: string;
     background: string;
   };
 }
@@ -29,7 +30,8 @@ export const lightTheme: ThemeObject = {
   },
   markdownArea: {
     color: '#35393F',
-    header: '#35393F',
+    header: '#F5F5F5',
+    headerColor: '#7C8187',
     background: '#FFF',
   },
 };
@@ -48,5 +50,6 @@ export const darkTheme: ThemeObject = {
     color: '#C1C4CB',
     background: '#151619',
     header: '#1D1F22',
+    headerColor: '#C1C4CB',
   },
 };

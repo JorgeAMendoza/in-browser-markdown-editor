@@ -5,7 +5,6 @@ const DocumentEditStyled = styled.main`
   grid-area: document;
   display: flex;
   height: 100%;
-  border: 1px solid red;
 
   > section:nth-of-type(2) {
     display: none;
