@@ -3,10 +3,11 @@ import device from '../../../util/device-breakpoints';
 
 const MarkdownTextAreaStyled = styled.section`
   flex: 1;
+  border: 1px solid yellow;
 
   textarea {
     vertical-align: top;
-    width: 100%;
+    min-width: 100%;
     height: 92vh;
     display: inline-block;
     padding: 1em;

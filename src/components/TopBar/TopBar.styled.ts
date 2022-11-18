@@ -94,6 +94,12 @@ export const DocumentName = styled.div`
     color: white;
     font-weight: 400;
     font-size: 1.5rem;
+    border: 1px solid black;
+    width: 15ch;
+
+    @media screen and ${device.tablet} {
+      width: 20ch;
+    }
   }
 `;
 

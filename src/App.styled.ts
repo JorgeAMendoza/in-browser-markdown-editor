@@ -20,7 +20,7 @@ const AppStyled = styled.div<AppStyledProps>`
       menuVisible ? 'translateX(23rem)' : 'translateX(0)'};
     transition: transform 0.3s;
     /* transition for markdown section */
-    min-width: 100vw;
+    width: 100vw;
     height: 100%;
   }
 `;

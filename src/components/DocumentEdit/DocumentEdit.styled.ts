@@ -3,6 +3,9 @@ import device from '../../util/device-breakpoints';
 
 const DocumentEditStyled = styled.main`
   grid-area: document;
+  display: flex;
+  height: 100%;
+  border: 1px solid red;
 
   > section:nth-of-type(2) {
     display: none;
@@ -22,9 +25,6 @@ const DocumentEditStyled = styled.main`
       display: block;
     }
   }
-
-  display: flex;
-  height: 100%;
 `;
 
 export default DocumentEditStyled;
