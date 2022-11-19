@@ -39,7 +39,7 @@ export const darkTheme: ThemeObject = {
   background: '#151619',
   previewArea: {
     color: '#C1C4CB',
-    header: '#FFF',
+    header: '#1D1F22',
     background: '#FFF',
     codeBlock: {
       color: '#FFF',
