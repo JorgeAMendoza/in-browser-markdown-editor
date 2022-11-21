@@ -27,17 +27,20 @@ const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
           onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
           onKeyDown={(e) => {
             const textArea = e.target;
-            if (e.key === 'Tab') {
+            if (e.key == 'Tab') {
               e.preventDefault();
-              const start = e.target.selectionStart;
-              const end = e.target.selectionEnd;
+              const start = textArea.selectionStart;
+              const end = textArea.selectionEnd;
 
+              // set textarea value to: text before caret + tab + text after caret
               textArea.value =
                 textArea.value.substring(0, start) +
-                '\t' +
+                '   ' +
                 textArea.value.substring(end);
 
-              textArea.selectionStart = start + 1;
+              // put caret at right position again
+              textArea.selectionStart = textArea.selectionEnd = start + 3;
+              dispatch(updateMarkdown(textArea.value));
             }
           }}
         />
