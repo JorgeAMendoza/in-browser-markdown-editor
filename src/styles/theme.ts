@@ -1,31 +1,22 @@
-interface ThemeObject {
-  background: string;
-  previewArea: {
-    color: string;
-    header: string;
-    background: string;
-    codeBlock: {
-      color: string;
-      background: string;
-    };
-  };
-  markdownArea: {
-    color: string;
-    header: string;
-    headerColor: string;
-    background: string;
-  };
-}
+import { DefaultTheme } from 'styled-components';
 
-export const lightTheme: ThemeObject = {
+export const lightTheme: DefaultTheme = {
   background: '#FFF',
+  seperatorOutline: '#E4E4E4',
   previewArea: {
     color: '#7C8187',
-    header: '#35393F',
-    background: '#FFF',
-    codeBlock: {
-      color: '#35393F',
-      background: '#F5F5F5',
+    header: '#F5F5F5',
+    previewMarkdown: {
+      header: '#35393F',
+      text: '#7C8187',
+      codeBlock: {
+        color: '#35393F',
+        background: '#F5F5F5',
+      },
+      blockquote: {
+        color: '#35393F',
+        background: '#F5F5F5',
+      },
     },
   },
   markdownArea: {
@@ -35,15 +26,23 @@ export const lightTheme: ThemeObject = {
     background: '#FFF',
   },
 };
-export const darkTheme: ThemeObject = {
+export const darkTheme: DefaultTheme = {
   background: '#151619',
+  seperatorOutline: '#5A6069',
   previewArea: {
     color: '#C1C4CB',
     header: '#1D1F22',
-    background: '#FFF',
-    codeBlock: {
-      color: '#FFF',
-      background: '#2B2D31',
+    previewMarkdown: {
+      header: '#FFF',
+      text: '#C1C4CB',
+      codeBlock: {
+        color: '#FFF',
+        background: '#2B2D31',
+      },
+      blockquote: {
+        color: '#FFFFFF',
+        background: '#2B2D31',
+      },
     },
   },
   markdownArea: {

@@ -5,12 +5,21 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     background: string;
+    seperatorOutline: string;
     previewArea: {
       color: string;
       header: string;
-      codeBlock: {
-        color: string;
-        background: string;
+      previewMarkdown: {
+        header: string;
+        text: string;
+        codeBlock: {
+          color: string;
+          background: string;
+        };
+        blockquote: {
+          background: string;
+          color: string;
+        };
       };
     };
     markdownArea: {

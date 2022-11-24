@@ -32,13 +32,11 @@ const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
               const start = textArea.selectionStart;
               const end = textArea.selectionEnd;
 
-              // set textarea value to: text before caret + tab + text after caret
               textArea.value =
                 textArea.value.substring(0, start) +
                 '   ' +
                 textArea.value.substring(end);
 
-              // put caret at right position again
               textArea.selectionStart = textArea.selectionEnd = start + 3;
               dispatch(updateMarkdown(textArea.value));
             }
