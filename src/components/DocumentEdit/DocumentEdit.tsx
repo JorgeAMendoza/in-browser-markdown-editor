@@ -18,7 +18,10 @@ const DocumentEdit = () => {
       {document ? (
         <>
           <MarkdownTextArea adjustPreview={adjustPreview} />
-          <PreviewTextArea adjustPreview={adjustPreview} />
+          <PreviewTextArea
+            adjustPreview={adjustPreview}
+            fullPreview={showPreview}
+          />
         </>
       ) : (
         <p>Open a saved document or create a new document!</p>

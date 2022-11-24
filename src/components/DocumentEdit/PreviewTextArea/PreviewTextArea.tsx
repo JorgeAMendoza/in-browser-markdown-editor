@@ -6,16 +6,20 @@ import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
 
 interface PreviewTextAreaProps {
   adjustPreview: () => void;
+  fullPreview: boolean;
 }
 
 const md = new markdownIt();
 
-const PreviewTextArea = ({ adjustPreview }: PreviewTextAreaProps) => {
+const PreviewTextArea = ({
+  adjustPreview,
+  fullPreview,
+}: PreviewTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
   const html = md.render(documentState.document?.documentMarkdown || '');
 
   return (
-    <PreviewTextAreaStyled>
+    <PreviewTextAreaStyled data-fullpreview={fullPreview}>
       <div>
         <h1>preview</h1>
         <button onClick={adjustPreview}>

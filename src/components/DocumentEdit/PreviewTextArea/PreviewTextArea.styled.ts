@@ -3,6 +3,11 @@ import styled from 'styled-components';
 const PreviewTextAreaStyled = styled.section`
   flex: 1;
   border-left: 1px solid ${({ theme }) => theme.seperatorOutline};
+  min-width: 50%;
+
+  &[data-fullpreview="false"] {
+    border-left: none;
+  }
 
   div:nth-of-type(1) {
     display: flex;

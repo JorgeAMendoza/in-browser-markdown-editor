@@ -3,6 +3,7 @@ import device from '../../../util/device-breakpoints';
 
 const MarkdownTextAreaStyled = styled.section`
   flex: 1;
+  min-width: 50%;
 
   textarea {
     vertical-align: top;
