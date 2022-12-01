@@ -2,6 +2,7 @@ import showPreviewIcon from '../../../assets/icon-show-preview.svg';
 import { marked } from 'marked';
 import { useAppSelector } from '../../../utils/redux-hooks';
 import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
+import DOMPurify from 'dompurify';
 
 interface PreviewTextAreaProps {
   adjustPreview: () => void;
@@ -25,7 +26,9 @@ const PreviewTextArea = ({
       </div>
       <PreviewText
         data-testid="previewTextArea"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(html, { USE_PROFILES: { html: true } }),
+        }}
       ></PreviewText>
     </PreviewTextAreaStyled>
   );
