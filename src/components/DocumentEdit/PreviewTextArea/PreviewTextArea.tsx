@@ -1,4 +1,5 @@
 import showPreviewIcon from '../../../assets/icon-show-preview.svg';
+import { marked } from 'marked';
 import { useAppSelector } from '../../../utils/redux-hooks';
 import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
 
@@ -12,7 +13,7 @@ const PreviewTextArea = ({
   fullPreview,
 }: PreviewTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
-  // const html = md.render(documentState.document?.documentMarkdown || '');
+  const html = marked.parse(documentState.document?.documentMarkdown || '');
 
   return (
     <PreviewTextAreaStyled data-fullpreview={fullPreview}>
@@ -22,9 +23,10 @@ const PreviewTextArea = ({
           <img src={showPreviewIcon} />
         </button>
       </div>
-      <PreviewText data-testid="previewTextArea">
-        <p>some text</p>
-      </PreviewText>
+      <PreviewText
+        data-testid="previewTextArea"
+        dangerouslySetInnerHTML={{ __html: html }}
+      ></PreviewText>
     </PreviewTextAreaStyled>
   );
 };
