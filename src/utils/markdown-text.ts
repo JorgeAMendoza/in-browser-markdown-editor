@@ -1,13 +1,17 @@
 // contains original markdown text
-export const newDocumentMarkdownText = `#Welcome to a new document
+export const newDocumentMarkdownText = `# Welcome to a new document
+
 ## How to use this?
  
 1. Write markdown in the markdown editor window
 2. See the rendered markdown in the preview window
+
 ### Features
+
 - Create headings, paragraphs, links, blockquotes, inline-code, code blocks, and lists
 - Name and save the document to access again later
 - Choose between Light or Dark mode depending on your preference
+
 > This is an example of a blockquote. If you would like to learn more about markdown syntax, you can visit this [markdown cheatsheet](https://www.markdownguide.org/cheat-sheet/).`;
 
 export const welcomeMarkdownText = `# Welcome to Markdown
