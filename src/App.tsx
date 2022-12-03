@@ -19,6 +19,7 @@ import AppStyled, { DocumentEditContainer } from './App.styled';
 import createSaveDate from './utils/create-save-date';
 import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyles } from './styles/Global.styled';
+import { Button } from './styles/utils/Button.styled';
 
 function App() {
   const [showMenu, setShowMenu] = useState(false);
@@ -135,22 +136,27 @@ function App() {
         <AppStyled menuVisible={showMenu}>
           {showDeleteModal && (
             <Modal
-              title="delete document"
+              title="Delete document"
               message="Are you sure you want to delete the current document and its contents? This action cannot be reversed."
             >
-              <button onClick={confirmDelete}>Confirm & Delete</button>
-              <button onClick={() => dispatch(removeModal('delete'))}>
+              <Button onClick={() => dispatch(removeModal('delete'))}>
                 Cancel
-              </button>
+              </Button>
+              <Button onClick={confirmDelete}>Confirm & Delete</Button>
             </Modal>
           )}
 
           {showOverwriteModal && (
-            <Modal title="Duplicate document" message="Document ">
-              <button onClick={() => dispatch(removeModal('overwrite'))}>
+            <Modal
+              title="Duplicate document"
+              message={`Document ${
+                document?.currentDocumentTitle || ''
+              } will have its contents overwritten. This action cannnot be reversed.`}
+            >
+              <Button onClick={() => dispatch(removeModal('overwrite'))}>
                 Cancel
-              </button>
-              <button onClick={confirmOverwrite}>Confirm & Overwrite</button>
+              </Button>
+              <Button onClick={confirmOverwrite}>Confirm</Button>
             </Modal>
           )}
 
@@ -161,35 +167,35 @@ function App() {
                 document?.currentDocumentTitle || ''
               } is invalid, please enter a valid document name`}
             >
-              <button onClick={() => dispatch(removeModal('title'))}>OK</button>
+              <Button onClick={() => dispatch(removeModal('title'))}>OK</Button>
             </Modal>
           )}
 
           {showDiscardNewModal && (
             <Modal
-              title="discard new document"
+              title="Discard new document"
               message={`do you want to discard the document ${
                 document?.currentDocumentTitle || ''
               }? This cannot be reversed.`}
             >
-              <button onClick={() => dispatch(removeModal('discardNew'))}>
-                cancel
-              </button>
-              <button onClick={confirmDiscard}>confirm</button>
+              <Button onClick={() => dispatch(removeModal('discardNew'))}>
+                Cancel
+              </Button>
+              <Button onClick={confirmDiscard}>Confirm</Button>
             </Modal>
           )}
 
           {showDiscardSavedModal && (
             <Modal
-              title="discard changes"
+              title="Discard changes"
               message={`do you want to discard any changes made to ${
                 document?.currentDocumentTitle || ''
               }? This cannot be reversed.`}
             >
-              <button onClick={() => dispatch(removeModal('discardSaved'))}>
-                cancel
-              </button>
-              <button onClick={confirmDiscard}>confirm</button>
+              <Button onClick={() => dispatch(removeModal('discardSaved'))}>
+                Cancel
+              </Button>
+              <Button onClick={confirmDiscard}>Confirm</Button>
             </Modal>
           )}
 
@@ -210,10 +216,10 @@ function App() {
                     }?`
               }
             >
-              <button onClick={() => dispatch(removeModal('switch'))}>
+              <Button onClick={() => dispatch(removeModal('switch'))}>
                 Cancel
-              </button>
-              <button onClick={confirmSwitch}>Confirm</button>
+              </Button>
+              <Button onClick={confirmSwitch}>Confirm</Button>
             </Modal>
           )}
           <Menu showMenu={showMenu} setTheme={setTheme} theme={theme} />

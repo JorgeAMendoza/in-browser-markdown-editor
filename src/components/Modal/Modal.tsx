@@ -9,9 +9,11 @@ interface ModalProps {
 const Modal = ({ title, message, children }: ModalProps) => {
   return (
     <ModalStyled data-testid="modalPrompt">
-      <h3>{title}</h3>
-      <p>{message}</p>
-      <div>{children}</div>
+      <div>
+        <h3>{title}</h3>
+        <p>{message}</p>
+        <div>{children}</div>
+      </div>
     </ModalStyled>
   );
 };
