@@ -136,6 +136,7 @@ function App() {
         <AppStyled menuVisible={showMenu}>
           {showDeleteModal && (
             <Modal
+              showMenu={showMenu}
               title="Delete document"
               message="Are you sure you want to delete the current document and its contents? This action cannot be reversed."
             >
@@ -148,6 +149,7 @@ function App() {
 
           {showOverwriteModal && (
             <Modal
+              showMenu={showMenu}
               title="Duplicate document"
               message={`Document ${
                 document?.currentDocumentTitle || ''
@@ -162,6 +164,7 @@ function App() {
 
           {showTitleModal && (
             <Modal
+              showMenu={showMenu}
               title="Invalid document name"
               message={`The document title ${
                 document?.currentDocumentTitle || ''
@@ -173,6 +176,7 @@ function App() {
 
           {showDiscardNewModal && (
             <Modal
+              showMenu={showMenu}
               title="Discard new document"
               message={`do you want to discard the document ${
                 document?.currentDocumentTitle || ''
@@ -187,6 +191,7 @@ function App() {
 
           {showDiscardSavedModal && (
             <Modal
+              showMenu={showMenu}
               title="Discard changes"
               message={`do you want to discard any changes made to ${
                 document?.currentDocumentTitle || ''
@@ -201,6 +206,7 @@ function App() {
 
           {showSwitchModal && (
             <Modal
+              showMenu={showMenu}
               title={
                 document?.isNewDocument
                   ? 'Discard New Document'

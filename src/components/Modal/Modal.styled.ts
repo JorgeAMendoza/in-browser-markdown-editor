@@ -1,10 +1,14 @@
 import styled from 'styled-components';
 
-const ModalStyled = styled.div`
+interface ModalStyledProps {
+  showMenu: boolean;
+}
+
+const ModalStyled = styled.div<ModalStyledProps>`
   position: absolute;
   display: block;
   top: 0;
-  left: -23rem;
+  left: ${({ showMenu }) => (showMenu ? '-23rem' : '0')};
   min-width: 100vw;
   min-height: 10rem;
   background-color: rgba(0, 0, 0, 0.5);
