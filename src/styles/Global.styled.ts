@@ -20,6 +20,11 @@ export const GlobalStyles = createGlobalStyle`
     position:relative;
     background-color: ${({ theme }) => theme.background};
   } 
+  #root{
+    position:relative;
+    width:100vw;
+    height:100vh;
+  }
   img,svg {
     max-width: 100%;
     display: block;

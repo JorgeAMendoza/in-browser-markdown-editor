@@ -15,7 +15,7 @@ import TopBar from './components/TopBar/TopBar';
 import Modal from './components/Modal/Modal';
 import { SavedDocument } from './types/saved-document';
 import Menu from './components/Menu/Menu';
-import AppStyled from './App.styled';
+import AppStyled, { DocumentEditContainer } from './App.styled';
 import createSaveDate from './utils/create-save-date';
 import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyles } from './styles/Global.styled';
@@ -217,10 +217,10 @@ function App() {
             </Modal>
           )}
           <Menu showMenu={showMenu} setTheme={setTheme} theme={theme} />
-          <div>
+          <DocumentEditContainer>
             <TopBar showMenu={showMenu} setShowMenu={setShowMenu} />
             <DocumentEdit />
-          </div>
+          </DocumentEditContainer>
         </AppStyled>
       </ThemeProvider>
     </>

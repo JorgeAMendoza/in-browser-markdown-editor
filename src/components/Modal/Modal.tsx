@@ -1,3 +1,5 @@
+import ModalStyled from './Modal.styled';
+
 interface ModalProps {
   title: string;
   message: string;
@@ -6,11 +8,11 @@ interface ModalProps {
 
 const Modal = ({ title, message, children }: ModalProps) => {
   return (
-    <div data-testid="modalPrompt">
+    <ModalStyled data-testid="modalPrompt">
       <h3>{title}</h3>
       <p>{message}</p>
       <div>{children}</div>
-    </div>
+    </ModalStyled>
   );
 };
 

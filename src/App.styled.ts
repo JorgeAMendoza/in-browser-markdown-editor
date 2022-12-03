@@ -23,4 +23,8 @@ const AppStyled = styled.div<AppStyledProps>`
   }
 `;
 
+export const DocumentEditContainer = styled.div`
+  position: relative;
+`;
+
 export default AppStyled;

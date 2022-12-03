@@ -63,7 +63,7 @@ export const MenuDocButton = styled(Button)`
 `;
 
 export const MenuLogo = styled.div`
-  @media screen and ${device.laptop} {
+  @media screen and (${device.laptop}) {
     display: none;
   }
 `;
