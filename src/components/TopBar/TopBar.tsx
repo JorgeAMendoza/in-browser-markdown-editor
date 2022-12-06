@@ -91,10 +91,10 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
         window.dispatchEvent(new Event('storage'));
       } else {
         if (!(document.currentDocumentTitle in savedDocumentsObject)) {
-          savedDocumentsObject[document.currentDocumentTitle].documentMarkdown =
-            document.documentMarkdown;
-          savedDocumentsObject[document.currentDocumentTitle].date =
-            createSaveDate(new Date());
+          savedDocumentsObject[document.currentDocumentTitle] = {
+            documentMarkdown: document.documentMarkdown,
+            date: createSaveDate(new Date()),
+          };
           delete savedDocumentsObject[document.originalDocumentTitle];
           localStorage.setItem(
             'savedMarkdown',
