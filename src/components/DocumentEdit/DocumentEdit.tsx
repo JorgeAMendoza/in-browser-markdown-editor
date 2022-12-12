@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useAppSelector } from '../../utils/redux-hooks';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
-import DocumentEditStyled from './DocumentEdit.styled';
+import DocumentEditStyled, { NoDocumentContainer } from './DocumentEdit.styled';
+import documentIcon from '../../assets/icon-document.svg';
 
 const DocumentEdit = () => {
   const [showPreview, setShowPreview] = useState(false);
@@ -24,7 +25,12 @@ const DocumentEdit = () => {
           />
         </>
       ) : (
-        <p>Open a saved document or create a new document!</p>
+        <NoDocumentContainer>
+          <p>Open a saved document or create a new document!</p>
+          <div>
+            <img src={documentIcon} alt="" />
+          </div>
+        </NoDocumentContainer>
       )}
     </DocumentEditStyled>
   );
