@@ -25,7 +25,7 @@ const PreviewTextArea = ({
         </button>
       </div>
       <PreviewText
-        data-testid="previewTextArea"
+        data-cy="previewTextArea"
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(html, { USE_PROFILES: { html: true } }),
         }}

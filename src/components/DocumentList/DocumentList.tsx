@@ -32,7 +32,7 @@ const DocumentList = () => {
     );
 
   return (
-    <DocumentListStyled data-testid="documentList">
+    <DocumentListStyled data-cy="documentList">
       {Object.keys(docList).map((doc) => (
         <DocumentListItem
           key={doc}

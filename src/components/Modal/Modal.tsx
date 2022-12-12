@@ -9,8 +9,8 @@ interface ModalProps {
 
 const Modal = ({ title, message, children, showMenu }: ModalProps) => {
   return (
-    <ModalStyled data-testid="modalPrompt" showMenu={showMenu}>
-      <div>
+    <ModalStyled showMenu={showMenu}>
+      <div data-cy="modalPrompt">
         <h3>{title}</h3>
         <p>{message}</p>
         <div>{children}</div>

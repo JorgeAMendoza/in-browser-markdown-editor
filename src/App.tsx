@@ -209,8 +209,8 @@ function App() {
               showMenu={showMenu}
               title={
                 document?.isNewDocument
-                  ? 'Discard New Document'
-                  : 'Discard Changes'
+                  ? 'Discard new document'
+                  : 'Discard changes'
               }
               message={
                 document?.isNewDocument

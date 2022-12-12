@@ -26,10 +26,7 @@ const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
         <img src={MarkdownLogo} alt="Markdown logo" />
       </MenuLogo>
       <MenuTitle>my documents</MenuTitle>
-      <MenuDocButton
-        onClick={newDocumentToggle}
-        data-testid="newDocumentButton"
-      >
+      <MenuDocButton onClick={newDocumentToggle} data-cy="newDocumentButton">
         + new document
       </MenuDocButton>
 

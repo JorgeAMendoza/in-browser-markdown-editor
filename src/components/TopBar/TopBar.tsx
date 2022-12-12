@@ -114,7 +114,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       <div>
         <MenuButton>
           <button
-            data-testid="menuButton"
+            data-cy="menuButton"
             onClick={() => {
               if (showMenu) setShowMenu(false);
               else setShowMenu(true);
@@ -144,7 +144,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
             <div>
               <p>document name</p>
               <input
-                data-testid="documentName"
+                data-cy="documentName"
                 type="text"
                 value={document?.currentDocumentTitle || ''}
                 onChange={({ target }) =>
@@ -168,7 +168,7 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
         </DeleteButton>
         <SaveButton
           disabled={disableAction}
-          data-testid="saveDocumentButton"
+          data-cy="saveDocumentButton"
           onClick={() => saveDocument()}
         >
           <div>

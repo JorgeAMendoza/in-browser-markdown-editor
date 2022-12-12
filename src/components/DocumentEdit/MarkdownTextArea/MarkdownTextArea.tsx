@@ -21,7 +21,7 @@ const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
       </div>
       <div>
         <textarea
-          data-testid="markdownTextArea"
+          data-cy="markdownTextArea"
           value={documentState.document?.documentMarkdown || ''}
           onChange={(e) => dispatch(updateMarkdown(e.target.value))}
           onBlur={(e) => dispatch(updateMarkdown(e.target.value))}

@@ -4,8 +4,8 @@ import 'cypress-localstorage-commands';
 describe('testing markdown syntax', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('[data-testid="previewTextArea"]').as('previewTextArea');
-    cy.get('[data-testid="markdownTextArea"]').as('markdownTextArea');
+    cy.get('[data-cy="previewTextArea"]').as('previewTextArea');
+    cy.get('[data-cy="markdownTextArea"]').as('markdownTextArea');
     cy.get('@markdownTextArea').focus().type('{selectAll}{backspace}');
   });
 
