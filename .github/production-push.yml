@@ -1,0 +1,29 @@
+name: Push to Production Branch
+
+on:
+  push:
+    branches:
+      - production
+
+  pull_request:
+    branches: [production]
+    types: [opended, synchronize]
+
+jobs:
+  production_push_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - name: npm install
+        run: npm ci
+      - name: lint project
+        run: npm run lint
+      - name: E2E testing on chrome browser
+        uses: cypress-io/github-action@v4.2.0
+        with:
+          browser: chrome
+          build: npm run build
+          start: npm run preview
