@@ -15,8 +15,8 @@ const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
     <MarkdownTextAreaStyled>
       <div>
         <h1>markdown</h1>
-        <button onClick={adjustPreview}>
-          <img src={showPreviewIcon} />
+        <button onClick={adjustPreview} aria-label="toggle fullscreen preview">
+          <img src={showPreviewIcon} alt="" />
         </button>
       </div>
       <div>
