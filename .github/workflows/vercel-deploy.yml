@@ -1,0 +1,37 @@
+name: Vercel Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  vercel_deployment_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - name: npm install
+        run: npm ci
+      - name: lint
+        run: npm run lint
+      - name: E2E on chrome
+        uses: cypress-io/github-action@v4.2.0
+        with:
+          browser: chrome
+          build: npm run build
+          start: npm run preview
+      - name: vercel deploy
+        uses: amondnet/vercel-action@v20
+        if: ${{!contains(github.event.commits.*.message, '#skip') && github.event_name == 'push'}}
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ secrets.ORG_ID}}
+          vercel-project-id: ${{ secrets.PROJECT_ID}}
