@@ -110,9 +110,6 @@ function App() {
     const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
 
     if (!savedMarkdownObject[targetDocumentTitle]) {
-      console.log(
-        'the document was able to be selected, but cannot be reached for some reason'
-      );
       dispatch(removeTargetDoc());
       dispatch(removeModal('switch'));
       // here we need to bring up the error modal

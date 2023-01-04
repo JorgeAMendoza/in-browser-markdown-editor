@@ -13,7 +13,6 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
   const toggleTheme = () => {
     if (theme === 'dark') setTheme('light');
     else setTheme('dark');
-    console.log('changing theme');
   };
   return (
     <ThemeToggleStyled>
