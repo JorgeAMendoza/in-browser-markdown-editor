@@ -3,7 +3,6 @@ import { useAppSelector } from '../../utils/redux-hooks';
 import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 import DocumentEditStyled, { NoDocumentContainer } from './DocumentEdit.styled';
-import documentIcon from '../../assets/icon-document.svg';
 import DocumentIcon from '../Icons/DocumentIcon';
 
 const DocumentEdit = () => {
