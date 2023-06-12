@@ -20,8 +20,13 @@ const PreviewTextArea = ({
     <PreviewTextAreaStyled data-fullpreview={fullPreview}>
       <div>
         <h1>preview</h1>
+<<<<<<< HEAD
         <button onClick={adjustPreview} aria-label="toggle full screen preview">
           <img src={showPreviewIcon} alt="" />
+=======
+        <button onClick={adjustPreview}>
+          <img src={showPreviewIcon} />
+>>>>>>> 69b235e9750ca4cbf83aad8121f024708bfd2e07
         </button>
       </div>
       <PreviewText

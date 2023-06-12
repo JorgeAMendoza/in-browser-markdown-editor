@@ -24,12 +24,22 @@ const DocumentListItem = ({
   const switchDocument = () => {
     const savedMarkdown = localStorage.getItem('savedMarkdown');
     if (!savedMarkdown) {
+<<<<<<< HEAD
+=======
+      console.log(
+        'this means that local storage was modified here, we need to create that error'
+      );
+>>>>>>> 69b235e9750ca4cbf83aad8121f024708bfd2e07
       return;
     }
 
     if (!document) {
       const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
       if (!savedMarkdownObject[documentTitle]) {
+<<<<<<< HEAD
+=======
+        console.log('error again');
+>>>>>>> 69b235e9750ca4cbf83aad8121f024708bfd2e07
         return;
       }
 

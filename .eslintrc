@@ -4,7 +4,10 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:cypress/recommended",
+<<<<<<< HEAD
     "plugin:jsx-a11y/recommended",
+=======
+>>>>>>> 69b235e9750ca4cbf83aad8121f024708bfd2e07
     "eslint-config-prettier"
   ],
   "plugins": ["@typescript-eslint"],
