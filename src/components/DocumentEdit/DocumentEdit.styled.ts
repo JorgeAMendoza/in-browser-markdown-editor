@@ -30,14 +30,17 @@ export const NoDocumentContainer = styled.div`
   margin: 0 auto;
   text-align: center;
   > p {
-    color: white;
+    color: ${({ theme }) => theme.markdownArea.color};
     font-size: 2.4rem;
   }
 
-  div > img {
-    width: 4rem;
+  div > svg {
     margin: 0 auto;
     margin-top: 2rem;
+
+    path {
+      fill: ${({ theme }) => theme.markdownArea.color};
+    }
   }
 `;
 

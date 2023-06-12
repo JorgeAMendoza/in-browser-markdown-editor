@@ -4,6 +4,7 @@ import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
 import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
 import DocumentEditStyled, { NoDocumentContainer } from './DocumentEdit.styled';
 import documentIcon from '../../assets/icon-document.svg';
+import DocumentIcon from '../Icons/DocumentIcon';
 
 const DocumentEdit = () => {
   const [showPreview, setShowPreview] = useState(false);
@@ -28,7 +29,7 @@ const DocumentEdit = () => {
         <NoDocumentContainer>
           <p>Open a saved document or create a new document!</p>
           <div>
-            <img src={documentIcon} alt="" />
+            <DocumentIcon />
           </div>
         </NoDocumentContainer>
       )}
