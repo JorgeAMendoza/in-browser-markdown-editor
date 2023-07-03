@@ -91,7 +91,7 @@ export const PreviewText = styled.div`
       theme.previewArea.previewMarkdown.codeBlock.background};
     padding: 1.75em;
     border-radius: 4px;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
   blockquote {
     background-color: ${({ theme }) =>
