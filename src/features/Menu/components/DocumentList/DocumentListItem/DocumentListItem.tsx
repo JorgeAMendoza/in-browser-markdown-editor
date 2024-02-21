@@ -1,11 +1,11 @@
-import fileIcon from '../../../assets/icon-document.svg';
+import fileIcon from '@assets/icon-document.svg';
 import {
   displayModal,
   changeDocument,
   applyTargetDoc,
-} from '../../../redux/document-reducer';
-import { SavedDocument } from '../../../types/saved-document';
-import { useAppDispatch, useAppSelector } from '../../../utils/redux-hooks';
+} from '@/redux/document-reducer';
+import { SavedDocument } from '@/types/saved-document';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
 import DocumentListItemStyled, {
   ListItemInfo,
 } from './DocumentListItem.styled';

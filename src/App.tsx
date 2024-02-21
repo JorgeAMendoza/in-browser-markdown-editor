@@ -1,25 +1,25 @@
+import { DocumentEdit } from '@features/DocumentEdit';
+import { Menu } from '@features/Menu';
+import { TopBar } from '@features/TopBar';
 import { useEffect, useState } from 'react';
-import DocumentEdit from './components/DocumentEdit/DocumentEdit';
-import { useAppDispatch, useAppSelector } from './utils/redux-hooks';
 import { ThemeProvider } from 'styled-components';
+import AppStyled, { DocumentEditContainer } from './App.styled';
+import Modal from './components/Modal/Modal';
 import {
+  changeDocument,
+  deleteDocument,
   initializeWelcomeMarkdown,
   removeModal,
-  deleteDocument,
-  setNewDocument,
-  saveDocumentInformation,
   removeTargetDoc,
-  changeDocument,
+  saveDocumentInformation,
+  setNewDocument,
 } from './redux/document-reducer';
-import TopBar from './components/TopBar/TopBar';
-import Modal from './components/Modal/Modal';
-import { SavedDocument } from './types/saved-document';
-import Menu from './components/Menu/Menu';
-import AppStyled, { DocumentEditContainer } from './App.styled';
-import createSaveDate from './utils/create-save-date';
-import { lightTheme, darkTheme } from './styles/theme';
 import { GlobalStyles } from './styles/Global.styled';
+import { darkTheme, lightTheme } from './styles/theme';
 import { Button } from './styles/utils/Button.styled';
+import { SavedDocument } from './types/saved-document';
+import createSaveDate from './utils/create-save-date';
+import { useAppDispatch, useAppSelector } from './hooks/redux-hooks';
 
 function App() {
   const [showMenu, setShowMenu] = useState(false);

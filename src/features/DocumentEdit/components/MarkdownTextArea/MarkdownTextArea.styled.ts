@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import device from '../../../utils/device-breakpoints';
+import device from '../../../../utils/device-breakpoints';
 
 const MarkdownTextAreaStyled = styled.section`
   flex: 1;

@@ -1,9 +1,9 @@
-import DocumentList from '../DocumentList/DocumentList';
-import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import { DocumentList } from '../DocumentList/';
+import { ThemeToggle } from '../ThemeToggle';
 import MenuStyled, { MenuDocButton, MenuLogo, MenuTitle } from './Menu.styled';
-import MarkdownLogo from '../../assets/logo.svg';
-import { useAppDispatch, useAppSelector } from '../../utils/redux-hooks';
-import { displayModal, setNewDocument } from '../../redux/document-reducer';
+import MarkdownLogo from '@assets/logo.svg';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
+import { displayModal, setNewDocument } from '@/redux/document-reducer';
 
 interface MenuProps {
   showMenu: boolean;
@@ -11,7 +11,7 @@ interface MenuProps {
   theme: 'light' | 'dark';
 }
 
-const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
+export const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -35,5 +35,3 @@ const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
     </MenuStyled>
   );
 };
-
-export default Menu;

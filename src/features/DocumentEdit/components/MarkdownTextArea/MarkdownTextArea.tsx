@@ -1,13 +1,13 @@
-import showPreviewIcon from '../../../assets/icon-show-preview.svg';
-import { useAppDispatch, useAppSelector } from '../../../utils/redux-hooks';
-import { updateMarkdown } from '../../../redux/document-reducer';
+import showPreviewIcon from '@assets/icon-show-preview.svg';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
+import { updateMarkdown } from '@/redux/document-reducer';
 import MarkdownTextAreaStyled from './MarkdownTextArea.styled';
 
 interface MarkdownTextAreaProps {
   adjustPreview: () => void;
 }
 
-const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
+export const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
   const documentState = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -47,5 +47,3 @@ const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
     </MarkdownTextAreaStyled>
   );
 };
-
-export default MarkdownTextArea;

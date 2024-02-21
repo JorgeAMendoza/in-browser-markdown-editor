@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useAppSelector } from '../../utils/redux-hooks';
-import MarkdownTextArea from './MarkdownTextArea/MarkdownTextArea';
-import PreviewTextArea from './PreviewTextArea/PreviewTextArea';
+import { useAppSelector } from '@/hooks/redux-hooks';
+import { MarkdownTextArea } from '../MarkdownTextArea';
+import { PreviewTextArea } from '../PreviewTextArea';
 import DocumentEditStyled, { NoDocumentContainer } from './DocumentEdit.styled';
-import DocumentIcon from '../Icons/DocumentIcon';
+import DocumentIcon from '@/components/Icons/DocumentIcon';
 
-const DocumentEdit = () => {
+export const DocumentEdit = () => {
   const [showPreview, setShowPreview] = useState(false);
   const { document } = useAppSelector((state) => state);
 
@@ -35,5 +35,3 @@ const DocumentEdit = () => {
     </DocumentEditStyled>
   );
 };
-
-export default DocumentEdit;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import DocumentListItem from './DocumentListItem/DocumentListItem';
-import { SavedDocument } from '../../types/saved-document';
+import { SavedDocument } from '@/types/saved-document';
 import DocumentListStyled from './DocumentList.styled';
 
-const DocumentList = () => {
+export const DocumentList = () => {
   const [docList, setDocList] = useState<SavedDocument>({});
 
   useEffect(() => {
@@ -43,5 +43,3 @@ const DocumentList = () => {
     </DocumentListStyled>
   );
 };
-
-export default DocumentList;

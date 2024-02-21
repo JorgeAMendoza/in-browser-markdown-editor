@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import device from '../../utils/device-breakpoints';
-import { Button } from '../../styles/utils/Button.styled';
+import device from '../../../../utils/device-breakpoints';
+import { Button } from '../../../../styles/utils/Button.styled';
 
 const TopBarStyled = styled.header`
   grid-area: topBar;

@@ -1,6 +1,6 @@
-import showPreviewIcon from '../../../assets/icon-show-preview.svg';
+import showPreviewIcon from '@assets/icon-show-preview.svg';
 import { marked } from 'marked';
-import { useAppSelector } from '../../../utils/redux-hooks';
+import { useAppSelector } from '@/hooks/redux-hooks';
 import PreviewTextAreaStyled, { PreviewText } from './PreviewTextArea.styled';
 import DOMPurify from 'dompurify';
 
@@ -9,7 +9,7 @@ interface PreviewTextAreaProps {
   fullPreview: boolean;
 }
 
-const PreviewTextArea = ({
+export const PreviewTextArea = ({
   adjustPreview,
   fullPreview,
 }: PreviewTextAreaProps) => {
@@ -33,5 +33,3 @@ const PreviewTextArea = ({
     </PreviewTextAreaStyled>
   );
 };
-
-export default PreviewTextArea;

@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-import { Button } from '../../styles/utils/Button.styled';
-import device from '../../utils/device-breakpoints';
+import { Button } from '../../../../styles/utils/Button.styled';
+import device from '../../../../utils/device-breakpoints';
 
 interface MenuStyledProps {
   menuVisible: boolean;

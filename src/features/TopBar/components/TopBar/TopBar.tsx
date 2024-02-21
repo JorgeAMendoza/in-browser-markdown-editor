@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import menuIcon from '../../assets/icon-menu.svg';
-import closeMenuIcon from '../../assets/icon-close.svg';
-import logoIcon from '../../assets/logo.svg';
-import documentIcon from '../../assets/icon-document.svg';
-import deleteIcon from '../../assets/icon-delete.svg';
-import saveIcon from '../../assets/icon-save.svg';
-import { useAppDispatch, useAppSelector } from '../../utils/redux-hooks';
-import { SavedDocument } from '../../types/saved-document';
+import menuIcon from '@assets/icon-menu.svg';
+import closeMenuIcon from '@assets/icon-close.svg';
+import logoIcon from '@assets/logo.svg';
+import documentIcon from '@assets/icon-document.svg';
+import deleteIcon from '@assets/icon-delete.svg';
+import saveIcon from '@assets/icon-save.svg';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
+import { SavedDocument } from '@/types/saved-document';
 import {
   updateCurrentDocumentTitle,
   saveDocumentInformation,
   displayModal,
-} from '../../redux/document-reducer';
+} from '@/redux/document-reducer';
 import TopBarStyled, {
   DocOptions,
   DocumentName,
@@ -20,14 +20,14 @@ import TopBarStyled, {
   SaveButton,
   DeleteButton,
 } from './TopBar.styled';
-import createSaveDate from '../../utils/create-save-date';
+import createSaveDate from '@/utils/create-save-date';
 
 interface TopBarProps {
   showMenu: boolean;
   setShowMenu: React.Dispatch<boolean>;
 }
 
-const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
+export const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
   const [disableAction, setDisableAction] = useState(false);
   const { document } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
@@ -180,5 +180,3 @@ const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
     </TopBarStyled>
   );
 };
-
-export default TopBar;

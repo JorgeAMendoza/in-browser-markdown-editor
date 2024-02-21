@@ -1,7 +1,7 @@
-import darkIcon from '../../assets/icon-dark-mode.svg';
-import lightIcon from '../../assets/icon-light-mode.svg';
-import lightIconActive from '../../assets/icon-light-mode-active.svg';
-import darkIconActive from '../../assets/icon-dark-mode-active.svg';
+import darkIcon from '@assets/icon-dark-mode.svg';
+import lightIcon from '@assets/icon-light-mode.svg';
+import lightIconActive from '@assets/icon-light-mode-active.svg';
+import darkIconActive from '@assets/icon-dark-mode-active.svg';
 import ThemeToggleStyled, { Toggle } from './ThemeToggle.styled';
 
 interface ThemeToggleProps {
@@ -9,7 +9,7 @@ interface ThemeToggleProps {
   theme: 'light' | 'dark';
 }
 
-const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
+export const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
   const toggleTheme = () => {
     if (theme === 'dark') setTheme('light');
     else setTheme('dark');
@@ -39,5 +39,3 @@ const ThemeToggle = ({ setTheme, theme }: ThemeToggleProps) => {
     </ThemeToggleStyled>
   );
 };
-
-export default ThemeToggle;
