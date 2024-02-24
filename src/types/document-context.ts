@@ -5,13 +5,20 @@ interface DocumentInfo {
   isNewDocument: boolean;
 }
 
+export type ModalAction =
+  | 'delete'
+  | 'discard'
+  | 'overwrite'
+  | 'title'
+  | 'switch'
+  | null;
+
 interface DocumentContext {
-  showDeleteModal: boolean;
-  showDiscardNewModal: boolean;
-  showDiscardSavedModal: boolean;
-  showOverwriteModal: boolean;
-  showTitleModal: boolean;
-  showSwitchModal: boolean;
+  modalInformation: {
+    title: string;
+    message: string;
+  } | null;
+  modalAction: ModalAction;
   targetSwitch: string | null;
   document: DocumentInfo | null;
 }

@@ -2,8 +2,7 @@ import { DocumentList } from '../DocumentList/';
 import { ThemeToggle } from '../ThemeToggle';
 import MenuStyled, { MenuDocButton, MenuLogo, MenuTitle } from './Menu.styled';
 import MarkdownLogo from '@assets/logo.svg';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
-import { displayModal, setNewDocument } from '@/redux/document-reducer';
+import { useDocumentAction } from '@/hooks/document-actions';
 
 interface MenuProps {
   showMenu: boolean;
@@ -12,21 +11,15 @@ interface MenuProps {
 }
 
 export const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
-  const { document } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const { newDoc } = useDocumentAction();
 
-  const newDocumentToggle = () => {
-    if (!document) dispatch(setNewDocument());
-    else if (document.isNewDocument) dispatch(displayModal('discardNew'));
-    else dispatch(displayModal('discardSaved'));
-  };
   return (
     <MenuStyled menuVisible={showMenu}>
       <MenuLogo>
         <img src={MarkdownLogo} alt="Markdown logo" />
       </MenuLogo>
       <MenuTitle>my documents</MenuTitle>
-      <MenuDocButton onClick={newDocumentToggle} data-cy="newDocumentButton">
+      <MenuDocButton onClick={newDoc} data-cy="newDocumentButton">
         + new document
       </MenuDocButton>
 

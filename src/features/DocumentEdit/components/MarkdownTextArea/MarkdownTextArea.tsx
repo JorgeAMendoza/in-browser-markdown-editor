@@ -1,15 +1,15 @@
 import showPreviewIcon from '@assets/icon-show-preview.svg';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
-import { updateMarkdown } from '@/redux/document-reducer';
+import { useAppSelector } from '@/hooks/redux-hooks';
 import MarkdownTextAreaStyled from './MarkdownTextArea.styled';
+import { useDocumentAction } from '@/hooks/document-actions';
 
 interface MarkdownTextAreaProps {
   adjustPreview: () => void;
 }
 
 export const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
-  const documentState = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const document = useAppSelector((state) => state.document);
+  const { updateDoc } = useDocumentAction();
 
   return (
     <MarkdownTextAreaStyled>
@@ -22,9 +22,9 @@ export const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
       <div>
         <textarea
           data-cy="markdownTextArea"
-          value={documentState.document?.documentMarkdown || ''}
-          onChange={(e) => dispatch(updateMarkdown(e.target.value))}
-          onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
+          value={document?.documentMarkdown || ''}
+          onChange={(e) => updateDoc(e.target.value)}
+          onBlur={(e) => updateDoc(e.target.value)}
           onKeyDown={(e) => {
             const textArea = e.target;
             if (!(textArea instanceof HTMLTextAreaElement)) return;
@@ -39,7 +39,7 @@ export const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
                 textArea.value.substring(end);
 
               textArea.selectionStart = textArea.selectionEnd = start + 3;
-              dispatch(updateMarkdown(textArea.value));
+              updateDoc(textArea.value);
             }
           }}
         />

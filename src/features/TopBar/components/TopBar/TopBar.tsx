@@ -5,13 +5,7 @@ import logoIcon from '@assets/logo.svg';
 import documentIcon from '@assets/icon-document.svg';
 import deleteIcon from '@assets/icon-delete.svg';
 import saveIcon from '@assets/icon-save.svg';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux-hooks';
-import { SavedDocument } from '@/types/saved-document';
-import {
-  updateCurrentDocumentTitle,
-  saveDocumentInformation,
-  displayModal,
-} from '@/redux/document-reducer';
+import { useAppSelector } from '@/hooks/redux-hooks';
 import TopBarStyled, {
   DocOptions,
   DocumentName,
@@ -20,7 +14,7 @@ import TopBarStyled, {
   SaveButton,
   DeleteButton,
 } from './TopBar.styled';
-import createSaveDate from '@/utils/create-save-date';
+import { useDocumentAction } from '@/hooks/document-actions';
 
 interface TopBarProps {
   showMenu: boolean;
@@ -30,84 +24,12 @@ interface TopBarProps {
 export const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
   const [disableAction, setDisableAction] = useState(false);
   const { document } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const { saveDoc, updateDocTitle, deleteDoc } = useDocumentAction();
 
   useEffect(() => {
     if (!document) setDisableAction(true);
     else setDisableAction(false);
   }, [document]);
-
-  const saveDocument = () => {
-    const savedDocuments = localStorage.getItem('savedMarkdown');
-    const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
-    if (!document) return;
-
-    if (!validDocumentTitle.test(document.currentDocumentTitle)) {
-      dispatch(displayModal('title'));
-      return;
-    }
-
-    if (!savedDocuments) {
-      localStorage.setItem(
-        'savedMarkdown',
-        JSON.stringify({
-          [document.currentDocumentTitle]: {
-            documentMarkdown: document.documentMarkdown,
-            date: createSaveDate(new Date()),
-          },
-        })
-      );
-      dispatch(saveDocumentInformation());
-      window.dispatchEvent(new Event('storage'));
-    } else if (document.isNewDocument) {
-      const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (document.currentDocumentTitle in savedDocumentsObject)
-        dispatch(displayModal('overwrite'));
-      else {
-        const newSave = {
-          documentMarkdown: document.documentMarkdown,
-          date: createSaveDate(new Date()),
-        };
-        savedDocumentsObject[document.currentDocumentTitle] = newSave;
-        localStorage.setItem(
-          'savedMarkdown',
-          JSON.stringify(savedDocumentsObject)
-        );
-        dispatch(saveDocumentInformation());
-        window.dispatchEvent(new Event('storage'));
-      }
-    } else if (!document.isNewDocument) {
-      const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (document.originalDocumentTitle === document.currentDocumentTitle) {
-        savedDocumentsObject[document.originalDocumentTitle].documentMarkdown =
-          document.documentMarkdown;
-        savedDocumentsObject[document.originalDocumentTitle].date =
-          createSaveDate(new Date());
-        localStorage.setItem(
-          'savedMarkdown',
-          JSON.stringify(savedDocumentsObject)
-        );
-        dispatch(saveDocumentInformation);
-        window.dispatchEvent(new Event('storage'));
-      } else {
-        if (!(document.currentDocumentTitle in savedDocumentsObject)) {
-          savedDocumentsObject[document.currentDocumentTitle] = {
-            documentMarkdown: document.documentMarkdown,
-            date: createSaveDate(new Date()),
-          };
-          delete savedDocumentsObject[document.originalDocumentTitle];
-          localStorage.setItem(
-            'savedMarkdown',
-            JSON.stringify(savedDocumentsObject)
-          );
-          dispatch(saveDocumentInformation());
-          window.dispatchEvent(new Event('storage'));
-        } else {
-          dispatch(displayModal('overwrite'));
-        }
-      }
-    }
-  };
 
   return (
     <TopBarStyled>
@@ -147,12 +69,8 @@ export const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
                 data-cy="documentName"
                 type="text"
                 value={document?.currentDocumentTitle || ''}
-                onChange={({ target }) =>
-                  dispatch(updateCurrentDocumentTitle(target.value))
-                }
-                onBlur={({ target }) =>
-                  dispatch(updateCurrentDocumentTitle(target.value))
-                }
+                onChange={({ target }) => updateDocTitle(target.value)}
+                onBlur={({ target }) => updateDocTitle(target.value)}
               />
             </div>
           </DocumentName>
@@ -160,16 +78,13 @@ export const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
       </div>
 
       <DocOptions>
-        <DeleteButton
-          disabled={disableAction}
-          onClick={() => dispatch(displayModal('delete'))}
-        >
+        <DeleteButton disabled={disableAction} onClick={() => deleteDoc()}>
           <img src={deleteIcon} alt="Click to delete the document" />
         </DeleteButton>
         <SaveButton
           disabled={disableAction}
           data-cy="saveDocumentButton"
-          onClick={() => saveDocument()}
+          onClick={() => saveDoc()}
         >
           <div>
             <img src={saveIcon} alt="Save the document" />

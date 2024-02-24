@@ -7,7 +7,7 @@ import DocumentIcon from '@/components/Icons/DocumentIcon';
 
 export const DocumentEdit = () => {
   const [showPreview, setShowPreview] = useState(false);
-  const { document } = useAppSelector((state) => state);
+  const document = useAppSelector((state) => state.document);
 
   const adjustPreview = () => {
     if (showPreview) setShowPreview(false);

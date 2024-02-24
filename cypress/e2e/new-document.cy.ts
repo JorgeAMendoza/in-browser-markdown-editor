@@ -45,7 +45,7 @@ describe('creating a new document from inital welcome page', () => {
 
     cy.get('[data-cy="modalPrompt"]')
       .find('h3')
-      .should('contain.text', 'Invalid document name');
+      .should('contain.text', 'Invalid document title');
     cy.get('[data-cy="modalPrompt"]').find('button').click();
     cy.get('[data-cy="modalPrompt"]').should('not.exist');
   });
