@@ -7,7 +7,6 @@ import AppStyled, { DocumentEditContainer } from './App.styled';
 import { Modal } from './features/Modal';
 import { GlobalStyles } from './styles/Global.styled';
 import { darkTheme, lightTheme } from './styles/theme';
-import { Button } from './styles/utils/Button.styled';
 import { useAppSelector } from './hooks/redux-hooks';
 
 function App() {

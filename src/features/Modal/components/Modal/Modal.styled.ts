@@ -17,6 +17,15 @@ const ModalStyled = styled.div<ModalStyledProps>`
   align-items: center;
   justify-content: center;
 
+  button {
+    border: none;
+    padding: 0.7em 1em;
+    border-radius: 5px;
+    background-color: #e46643;
+    color: white;
+    width: 100%;
+  }
+
   > div {
     background-color: #fff;
     width: min(95%, 34.3rem);
@@ -38,10 +47,6 @@ const ModalStyled = styled.div<ModalStyledProps>`
       width: 100%;
       display: flex;
       gap: 1rem;
-
-      button {
-        width: 100%;
-      }
     }
   }
 `;

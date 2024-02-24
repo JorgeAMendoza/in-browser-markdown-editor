@@ -18,16 +18,18 @@ export const Modal = ({ showMenu }: ModalProps) => {
         <h3>{modalInformation?.title}</h3>
         <p>{modalInformation?.message}</p>
 
-        {modalAction !== 'title' ? (
-          <button onClick={() => dispatch(removeModal())}>Cancel</button>
-        ) : null}
+        <div>
+          {modalAction !== 'title' ? (
+            <button onClick={() => dispatch(removeModal())}>Cancel</button>
+          ) : null}
 
-        {/* <button onClick={dispatch(methods['switch'])}>Confirm</button> */}
-        {modalAction !== null && modalAction !== 'title' ? (
-          <button onClick={() => dispatch(methods[modalAction])}>
-            Confirm
-          </button>
-        ) : null}
+          {/* <button onClick={dispatch(methods['switch'])}>Confirm</button> */}
+          {modalAction !== null && modalAction !== 'title' ? (
+            <button onClick={() => dispatch(methods[modalAction])}>
+              Confirm
+            </button>
+          ) : null}
+        </div>
 
         {modalAction === 'title' ? (
           <button onClick={() => dispatch(removeModal())}>OK</button>
