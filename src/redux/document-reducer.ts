@@ -5,9 +5,19 @@ import {
   welcomeMarkdownText,
 } from '../utils/markdown-text';
 import { AppDispatch } from './store';
-import { ModalTypes } from '../types/modal-types';
+import type { ModalAction } from '../types/document-context';
 
-const initialState: DocumentContext = {} as DocumentContext;
+const initialState: DocumentContext = {
+  document: {
+    originalDocumentTitle: 'welcome.md',
+    currentDocumentTitle: 'welcome.md',
+    documentMarkdown: welcomeMarkdownText,
+    isNewDocument: true,
+  },
+  modalAction: null,
+  modalInformation: null,
+  targetSwitch: null,
+};
 
 const documentContextSlice = createSlice({
   name: 'documentContext',
@@ -30,13 +40,9 @@ const documentContextSlice = createSlice({
     setNullDocument(_state) {
       return {
         document: null,
-        showDeleteModal: false,
-        showDiscardNewModal: false,
-        showDiscardSavedModal: false,
-        showOverwriteModal: false,
-        showTitleModal: false,
-        showSwitchModal: false,
         targetSwitch: null,
+        modalAction: null,
+        modalInformation: null,
       };
     },
     documentSaved(state) {
@@ -46,66 +52,24 @@ const documentContextSlice = createSlice({
       state.document.isNewDocument = false;
       return state;
     },
-    showModal(state, action: PayloadAction<ModalTypes>) {
-      switch (action.payload) {
-        case 'delete': {
-          state.showDeleteModal = true;
-          break;
-        }
-        case 'discardNew': {
-          state.showDiscardNewModal = true;
-          break;
-        }
-        case 'discardSaved': {
-          state.showDiscardSavedModal = true;
-          break;
-        }
-        case 'overwrite': {
-          state.showOverwriteModal = true;
-          break;
-        }
-        case 'title': {
-          state.showTitleModal = true;
-          break;
-        }
-        case 'switch': {
-          state.showSwitchModal = true;
-          break;
-        }
-        default:
-          return state;
-      }
+    showModal(
+      state,
+      action: PayloadAction<{
+        action: ModalAction;
+        message: string;
+        title: string;
+      }>
+    ) {
+      state.modalAction = action.payload.action;
+      state.modalInformation = {
+        title: action.payload.title,
+        message: action.payload.message,
+      };
       return state;
     },
-    hideModal(state, action: PayloadAction<ModalTypes>) {
-      switch (action.payload) {
-        case 'delete': {
-          state.showDeleteModal = false;
-          break;
-        }
-        case 'discardNew': {
-          state.showDiscardNewModal = false;
-          break;
-        }
-        case 'discardSaved': {
-          state.showDiscardSavedModal = false;
-          break;
-        }
-        case 'overwrite': {
-          state.showOverwriteModal = false;
-          break;
-        }
-        case 'title': {
-          state.showTitleModal = false;
-          break;
-        }
-        case 'switch': {
-          state.showSwitchModal = false;
-          break;
-        }
-        default:
-          return state;
-      }
+    hideModal(state) {
+      state.modalAction = null;
+      state.modalInformation = null;
       return state;
     },
     searchDoc(state, action: PayloadAction<string | null>) {
@@ -126,28 +90,6 @@ export const {
   searchDoc,
 } = documentContextSlice.actions;
 
-// On page load, intialize the context with the welcome markdown content, set the title as well
-export const initializeWelcomeMarkdown = () => {
-  return (dispatch: AppDispatch) => {
-    const welcomeMarkdown: DocumentContext = {
-      document: {
-        originalDocumentTitle: 'welcome.md',
-        currentDocumentTitle: 'welcome.md',
-        documentMarkdown: welcomeMarkdownText,
-        isNewDocument: true,
-      },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
-      targetSwitch: null,
-    };
-    dispatch(setMarkdownInformation(welcomeMarkdown));
-  };
-};
-
 // when a user clicks a document in the list, switch to this page (if no conflicts exist)
 export const changeDocument = (
   documentTitle: string,
@@ -161,12 +103,8 @@ export const changeDocument = (
         documentMarkdown: documentMarkdown,
         isNewDocument: false,
       },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
+      modalAction: null,
+      modalInformation: null,
       targetSwitch: null,
     };
     dispatch(setMarkdownInformation(document));
@@ -182,12 +120,8 @@ export const setNewDocument = () => {
         documentMarkdown: newDocumentMarkdownText,
         isNewDocument: true,
       },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
+      modalAction: null,
+      modalInformation: null,
       targetSwitch: null,
     };
     dispatch(setMarkdownInformation(newMarkdown));
@@ -221,15 +155,25 @@ export const deleteDocument = () => {
   };
 };
 
-export const displayModal = (modalName: ModalTypes) => {
+export const displayModal = (
+  modalMessage: string,
+  modalTitle: string,
+  modalAction: ModalAction
+) => {
   return (dispatch: AppDispatch) => {
-    dispatch(showModal(modalName));
+    dispatch(
+      showModal({
+        message: modalMessage,
+        title: modalTitle,
+        action: modalAction,
+      })
+    );
   };
 };
 
-export const removeModal = (modalName: ModalTypes) => {
+export const removeModal = () => {
   return (dispatch: AppDispatch) => {
-    dispatch(hideModal(modalName));
+    dispatch(hideModal());
   };
 };
 

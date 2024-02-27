@@ -59,6 +59,7 @@ describe('switching documents', () => {
 
     cy.get('[data-cy="modalPrompt"]').find('button:nth-of-type(2)').click();
 
+    cy.get('@menuButton').click();
     cy.get('@documentNameInput').should('contain.value', 'my-doc.md');
     cy.get('@markdownTextArea').type(
       '{selectAll}{backspace}The document has been edited'
