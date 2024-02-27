@@ -7,13 +7,13 @@ Project requirements and design provided thanks to [FrontEndMentors](https://www
 The requirement of the project is to create a single-page markdown editor application that is capable of the following:
 
 - Preview markdown syntax as HTML while editing
-- Save markdown documents for later editing
+- Save markdown documents
 - Switch between saved markdown documents
 - Delete and edit markdown documents
 
 ## Techstack Used
 
-This Project was bootstrapped with [Vite](https://vitejs.dev/guide/) using the the React/Typescript template. The project is linted with [Eslint](https://eslint.org/docs/latest/user-guide/getting-started) using react, prettier, cypress, and the [jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) rules.
+This Project was bootstrapped with [Vite](https://vitejs.dev/guide/) using the the React/Typescript template. The project is linted with [ESLint](https://eslint.org/docs/latest/user-guide/getting-started) using react, prettier, cypress, and the [jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) rules. The application was built with the following technologies:
 
 - [React](https://reactjs.org/docs/getting-started.html), a JavaScript library for building user interfaces
 - [Cypress](https://docs.cypress.io/guides/overview/why-cypress), a JavaScript testing library for creating end-to-end and unit tests
@@ -21,7 +21,7 @@ This Project was bootstrapped with [Vite](https://vitejs.dev/guide/) using the t
 - [Redux](https://redux.js.org/) and [Redux toolkit](https://redux-toolkit.js.org/), a state management tool for JavaScript applications
 - [marked](https://www.npmjs.com/package/marked), a low-level compiler for parsing markdown without caching or blocking for long periods of time
 
-The [Local Storage Browser API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) is used to save markdown documents to the user's browser
+The [Local Storage Browser API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) is used to save markdown documents to the user's browser.
 
 ## Runing the Application
 
@@ -37,7 +37,7 @@ This section discusses the development process of the application, and the chall
 
 ### Rendering Markdown
 
-The first goal I wanted to complete was converting/parsing string and rendering it into markdown on the page. It would take an extenstive amount of time to create my own implementation, so it was decided early in development to implement a package that would handle this.
+The first goal I wanted to complete was converting/parsing string and rendering it into markdown on the page. It would take an extenstive amount of time to create my own implementation, so it was decided early in development to utilize a library that would handle this.
 
 After researching, I came upon the _marked_ library which was easy to configure and provided fast results. It takes in some string, and returns valid markdown syntax back as HTML string.
 
@@ -55,8 +55,6 @@ Each markdown document is set to include the following information:
 2. The document name
 3. New document status
 4. The _original_ name of the document
-
-#### Disorgnaized State
 
 When I initally planned the application and got the markdown render working, I came to the realization that I was creating many instances of state, and more importantly, was passing this state as props down through multiple components (_prop-drilling_). Some examples of this include:
 
@@ -83,7 +81,17 @@ If any of these events occured, a modal would appear giving the user the ability
 See the implementation of the redux slice below:
 
 ```typescript
-const initialState: DocumentContext = {} as DocumentContext;
+const initialState: DocumentContext = {
+  document: {
+    originalDocumentTitle: 'welcome.md',
+    currentDocumentTitle: 'welcome.md',
+    documentMarkdown: welcomeMarkdownText,
+    isNewDocument: true,
+  },
+  modalAction: null,
+  modalInformation: null,
+  targetSwitch: null,
+};
 
 const documentContextSlice = createSlice({
   name: 'documentContext',
@@ -106,13 +114,9 @@ const documentContextSlice = createSlice({
     setNullDocument(_state) {
       return {
         document: null,
-        showDeleteModal: false,
-        showDiscardNewModal: false,
-        showDiscardSavedModal: false,
-        showOverwriteModal: false,
-        showTitleModal: false,
-        showSwitchModal: false,
         targetSwitch: null,
+        modalAction: null,
+        modalInformation: null,
       };
     },
     documentSaved(state) {
@@ -122,66 +126,24 @@ const documentContextSlice = createSlice({
       state.document.isNewDocument = false;
       return state;
     },
-    showModal(state, action: PayloadAction<ModalTypes>) {
-      switch (action.payload) {
-        case 'delete': {
-          state.showDeleteModal = true;
-          break;
-        }
-        case 'discardNew': {
-          state.showDiscardNewModal = true;
-          break;
-        }
-        case 'discardSaved': {
-          state.showDiscardSavedModal = true;
-          break;
-        }
-        case 'overwrite': {
-          state.showOverwriteModal = true;
-          break;
-        }
-        case 'title': {
-          state.showTitleModal = true;
-          break;
-        }
-        case 'switch': {
-          state.showSwitchModal = true;
-          break;
-        }
-        default:
-          return state;
-      }
+    showModal(
+      state,
+      action: PayloadAction<{
+        action: ModalAction;
+        message: string;
+        title: string;
+      }>
+    ) {
+      state.modalAction = action.payload.action;
+      state.modalInformation = {
+        title: action.payload.title,
+        message: action.payload.message,
+      };
       return state;
     },
-    hideModal(state, action: PayloadAction<ModalTypes>) {
-      switch (action.payload) {
-        case 'delete': {
-          state.showDeleteModal = false;
-          break;
-        }
-        case 'discardNew': {
-          state.showDiscardNewModal = false;
-          break;
-        }
-        case 'discardSaved': {
-          state.showDiscardSavedModal = false;
-          break;
-        }
-        case 'overwrite': {
-          state.showOverwriteModal = false;
-          break;
-        }
-        case 'title': {
-          state.showTitleModal = false;
-          break;
-        }
-        case 'switch': {
-          state.showSwitchModal = false;
-          break;
-        }
-        default:
-          return state;
-      }
+    hideModal(state) {
+      state.modalAction = null;
+      state.modalInformation = null;
       return state;
     },
     searchDoc(state, action: PayloadAction<string | null>) {
@@ -198,37 +160,15 @@ The redux slice for the markdown documents above handles the following actions:
 - **Update the markdown content**, when a user types into the markdown text area, the slice's **current markdown** property is updated.
 - **change the document title**, change the title in the redux store (local storage change done somewhere else)
 - **remove a document/set store to null**, a user can delete a document and potentially be left with no document to view, thus the store should have a "null" state to indicate there is no document on the page to edit.
-- **Hide/show a message to the user**, multiple boolean values were created that, if active, will display a certian modal (deleting, saving, overwriting, etc.), giving them the option to cancel/confirm the action. The show method for the modal ensures that every modal display boolean value is set to false, except the one that is passed into the payload. The hide action will set the payload's target to false, hiding the modal.
+- **Hide/show a message to the user**, a "modal" object in the store, when it has information, will render a `Modal` component on the page, and the component itself will extract the information from the store and display it to the user. Two methods in the store either show or hide the modal, and entire page resets will ensure to remove the modal as well.
 
 #### Redux Dispatch Functions
 
-Instead of calling the dispatch function in the components and passing down the payload information directly, functions that return another function that will call the store's dispatch with the arguments provided were created. I did this because it was easier to understand what dispatch was doing based on the name of the function, and it made the components more readable.
+Instead of calling the dispatch function in the components and passing down the payload information directly, functions that return another function that will call the store's dispatch with the arguments provided were created. I did this because it was easier to understand what dispatch was doing based on the name of the function, and it made the components easier to read.
 
-Example of three of these functions below:
+Examples of two of these functions below:
 
 ```typescript
-// On page load, intialize the context with the welcome markdown content, set the title as well
-export const initializeWelcomeMarkdown = () => {
-  return (dispatch: AppDispatch) => {
-    const welcomeMarkdown: DocumentContext = {
-      document: {
-        originalDocumentTitle: 'welcome.md',
-        currentDocumentTitle: 'welcome.md',
-        documentMarkdown: welcomeMarkdownText,
-        isNewDocument: true,
-      },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
-      targetSwitch: null,
-    };
-    dispatch(setMarkdownInformation(welcomeMarkdown));
-  };
-};
-
 // when a user clicks a document in the list, switch to this page (if no conflicts exist)
 export const changeDocument = (
   documentTitle: string,
@@ -242,17 +182,18 @@ export const changeDocument = (
         documentMarkdown: documentMarkdown,
         isNewDocument: false,
       },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
+      modalAction: null,
+      modalInformation: null,
       targetSwitch: null,
     };
     dispatch(setMarkdownInformation(document));
   };
 };
+```
+
+The `changeDocument` function will take in a document title and markdown, and call the dispatch method of `setMarkdownInformation` to render the document on the page.
+
+```typescript
 // if user clicks new page (and accepts save or discard) then set context to new document markdown
 export const setNewDocument = () => {
   return (dispatch: AppDispatch) => {
@@ -263,12 +204,8 @@ export const setNewDocument = () => {
         documentMarkdown: newDocumentMarkdownText,
         isNewDocument: true,
       },
-      showDeleteModal: false,
-      showDiscardNewModal: false,
-      showDiscardSavedModal: false,
-      showOverwriteModal: false,
-      showTitleModal: false,
-      showSwitchModal: false,
+      modalAction: null,
+      modalInformation: null,
       targetSwitch: null,
     };
     dispatch(setMarkdownInformation(newMarkdown));
@@ -276,43 +213,98 @@ export const setNewDocument = () => {
 };
 ```
 
-### Application Logic & Structure
+The `setNewDocument` method will also call the dispatch method `setMarkdownInformation`, but instead takes in the prepared `new-document` markdown content found in the [markdown-text.ts file](https://github.com/JorgeAMendoza/in-browser-markdown-editor/blob/main/src/utils/markdown-text.ts)
 
-With Redux now implemented, the next step was to use these actions together to create the application structure and logic flow.
+#### Redux Actions
 
-#### Initializing The Page
+Originally, this application had functions within related components that used the application `selector` and `dispatch` to modify the store. However, this implementation was lacking in multiple ways:
 
-When the page loads, the application should display a _welcome_ markdown document. This document is created by calling the dispatch function with the `initalizeWelcomeMarkdown` function which creates a document object with the welcome markdown content, and sets the title of the document. This function is called in the `App.tsx` file, which is the main entry point of the application. This is done in a `useEffect` hook that is only called once, when the page loads. This hook also checks to user's theme preferences and sets the color theme accordingly.
+- Making component files larger and harder to read.
+- Making it harder to debug.
 
-The `App.tsx` component can be seen below:
+I wasn't a fan of coming back to revisit a component and seeing complex logic within the component itself, there should be a better way for the component to call the needed action without over-bloating. The solution to this was a simple one, put the related functionaility into a React Hook.
+
+Within the [document-action.ts file](/src/hooks/document-actions.ts), the `useDocumentAction` hook contains multiple functions that modify the document store in various ways. This hook uses the `useAppSelector` and `useAppDispatch` hooks to retrieve the store information and dispatch method. This implementation makes it so that not every component needs to call the reducer hooks directly, instead, this hook acts as a proxy between the components and the actions needed to interact with the store.
+
+For example, see the snippet for the `newDoc` function:
 
 ```typescript
-function App() {
-  const [showMenu, setShowMenu] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const dispatch = useAppDispatch();
-  const {
-    showTitleModal,
-    showDeleteModal,
-    showDiscardNewModal,
-    showDiscardSavedModal,
-    showOverwriteModal,
-    showSwitchModal,
-    targetSwitch,
-    document,
-  } = useAppSelector((state) => state);
-  useEffect(() => {
-    dispatch(initializeWelcomeMarkdown());
-    if (
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      setTheme('dark');
-    } else setTheme('light');
-  }, []);
-    ...
-}
+const newDoc = useCallback(() => {
+  if (!document) {
+    dispatch(setNewDocument());
+    return;
+  } else if (document.isNewDocument)
+    dispatch(
+      displayModal(
+        `do you want to discard the document ${document.currentDocumentTitle}? This cannot be reversed.`,
+        'Discard new document',
+        'discard'
+      )
+    );
+  else
+    dispatch(
+      displayModal(
+        `do you want to discard any changes made to ${
+          document?.currentDocumentTitle || ''
+        }? This cannot be reversed.`,
+        'Discard changes',
+        'discard'
+      )
+    );
+}, [document]);
 ```
+
+The function is wrapped around the `useCallback` react hook, which ensures that the function is only recreated when `document` property is modified. When called, it sets a new document if the `document` is not set (meaning there is no document rendered on the page), else it will use a dispatch method to render a modal that asks the user if they want to discard a new or saved document.
+
+Other functions exist within this hook as well, all of them which were originally within components but moved here. Moving all these functions into the hook doesn't improve performance, but having just one location where they can exist makes it easier to organize and extract.
+
+This same implementation was used for actions that result from a user's choice on the modal. The same logic applies here as well, have one hook that contains the store actions, and return functions that modify the store. This file can be found within the `Modal` feature folder in the [modal-aciton.ts file](/src/features/Modal/hooks/modal-actions.ts).
+
+### Application Logic & Structure
+
+This section will discuss some of the major functionality implemented into the application, going into more detail about the component created and the redux action.
+
+#### Modal
+
+As I developed the application, I was coming to realize just how tedious implementing the modal would become. It seemed simple at first, just render a modal that confirms whether some action should occur or not. But as I began to implement custom titles, messages, and more; it starts to pile up into something unmanageable. As stated before, functions were created within the component and passed into the modal. However, it was adjusted so that the modal renders only when there is a message to display, and instead of taking in the messages as props, it would be extracted from the store, and that informatino would be used to determine what action the modal should take.
+
+See a snippet of [Modal.tsx](/src/features/Modal/components/Modal/Modal.tsx) below:
+
+```tsx
+export const Modal = ({ showMenu }: ModalProps) => {
+  const { modalAction, modalInformation } = useAppSelector((state) => state);
+  const methods = useModalAction();
+  const dispatch = useAppDispatch();
+
+  return (
+    <ModalStyled showMenu={showMenu}>
+      <div data-cy="modalPrompt">
+        <h3>{modalInformation?.title}</h3>
+        <p>{modalInformation?.message}</p>
+
+        <div>
+          {modalAction !== 'title' ? (
+            <button onClick={() => dispatch(removeModal())}>Cancel</button>
+          ) : null}
+
+          {/* <button onClick={dispatch(methods['switch'])}>Confirm</button> */}
+          {modalAction !== null && modalAction !== 'title' ? (
+            <button onClick={() => dispatch(methods[modalAction])}>
+              Confirm
+            </button>
+          ) : null}
+        </div>
+
+        {modalAction === 'title' ? (
+          <button onClick={() => dispatch(removeModal())}>OK</button>
+        ) : null}
+      </div>
+    </ModalStyled>
+  );
+};
+```
+
+All modal actions (confirmSave, discard, etc) were declared and are extracted from the `useModalAction` hook. Ssing the `modalAction` string value extracted from the store, we can use bracket notation to easily extract the desired function from the object without using lengthy conditionals. This behavior isn't consistent for every modal render howevever. For example, for invalid title changes, the modal should only render an OK button, and not a cancel button.
 
 #### Saving a Document
 
@@ -321,182 +313,147 @@ When a user saves a document, the application must ensure the following:
 - The document title is valid
 - The document title does not already exist
 
-In the `TopBar.tsx` component, the `saveDocument` function is responsible for validating document titles, confirming that documents are new, and confirming if a document needs to be overwritten. Implementation of that function can be seen below:
+In the `document-action.ts` file, the following function is returned by the hook:
 
 ```typescript
-const TopBar = ({ showMenu, setShowMenu }: TopBarProps) => {
-  const [disableAction, setDisableAction] = useState(false);
-  const { document } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+const saveDoc = useCallback(() => {
+  const savedDocuments = localStorage.getItem('savedMarkdown');
+  const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
+  if (!document) return;
 
-  useEffect(() => {
-    if (!document) setDisableAction(true);
-    else setDisableAction(false);
-  }, [document]);
+  if (!validDocumentTitle.test(document.currentDocumentTitle)) {
+    dispatch(
+      displayModal(
+        `The document title ${
+          document?.currentDocumentTitle || ''
+        } is invalid, please enter a valid document name`,
+        'Invalid document title',
+        'title'
+      )
+    );
+    return;
+  }
 
-  const saveDocument = () => {
-    const savedDocuments = localStorage.getItem('savedMarkdown');
-    const validDocumentTitle = /^[-\w^&'@{}[\],$=!#()%+~]+\.md$/;
-    if (!document) return;
-
-    if (!validDocumentTitle.test(document.currentDocumentTitle)) {
-      dispatch(displayModal('title'));
-      return;
-    }
-
-    if (!savedDocuments) {
+  if (!savedDocuments) {
+    localStorage.setItem(
+      'savedMarkdown',
+      JSON.stringify({
+        [document.currentDocumentTitle]: {
+          documentMarkdown: document.documentMarkdown,
+          date: createSaveDate(new Date()),
+        },
+      })
+    );
+    dispatch(saveDocumentInformation());
+    window.dispatchEvent(new Event('storage'));
+  } else if (document.isNewDocument) {
+    const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
+    if (document.currentDocumentTitle in savedDocumentsObject)
+      dispatch(
+        displayModal(
+          `Document ${
+            document?.currentDocumentTitle || ''
+          } will have its contents overwritten. This action cannnot be reversed.`,
+          'Duplicate document',
+          'overwrite'
+        )
+      );
+    else {
+      const newSave = {
+        documentMarkdown: document.documentMarkdown,
+        date: createSaveDate(new Date()),
+      };
+      savedDocumentsObject[document.currentDocumentTitle] = newSave;
       localStorage.setItem(
         'savedMarkdown',
-        JSON.stringify({
-          [document.currentDocumentTitle]: {
-            documentMarkdown: document.documentMarkdown,
-            date: createSaveDate(new Date()),
-          },
-        })
+        JSON.stringify(savedDocumentsObject)
       );
       dispatch(saveDocumentInformation());
       window.dispatchEvent(new Event('storage'));
-    } else if (document.isNewDocument) {
-      const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (document.currentDocumentTitle in savedDocumentsObject)
-        dispatch(displayModal('overwrite'));
-      else {
-        const newSave = {
+    }
+  } else if (!document.isNewDocument) {
+    const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
+    if (document.originalDocumentTitle === document.currentDocumentTitle) {
+      savedDocumentsObject[document.originalDocumentTitle].documentMarkdown =
+        document.documentMarkdown;
+      savedDocumentsObject[document.originalDocumentTitle].date =
+        createSaveDate(new Date());
+      localStorage.setItem(
+        'savedMarkdown',
+        JSON.stringify(savedDocumentsObject)
+      );
+      dispatch(saveDocumentInformation);
+      window.dispatchEvent(new Event('storage'));
+    } else {
+      if (!(document.currentDocumentTitle in savedDocumentsObject)) {
+        savedDocumentsObject[document.currentDocumentTitle] = {
           documentMarkdown: document.documentMarkdown,
           date: createSaveDate(new Date()),
         };
-        savedDocumentsObject[document.currentDocumentTitle] = newSave;
+        delete savedDocumentsObject[document.originalDocumentTitle];
         localStorage.setItem(
           'savedMarkdown',
           JSON.stringify(savedDocumentsObject)
         );
         dispatch(saveDocumentInformation());
         window.dispatchEvent(new Event('storage'));
-      }
-    } else if (!document.isNewDocument) {
-      const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
-      if (document.originalDocumentTitle === document.currentDocumentTitle) {
-        savedDocumentsObject[document.originalDocumentTitle].documentMarkdown =
-          document.documentMarkdown;
-        savedDocumentsObject[document.originalDocumentTitle].date =
-          createSaveDate(new Date());
-        localStorage.setItem(
-          'savedMarkdown',
-          JSON.stringify(savedDocumentsObject)
-        );
-        dispatch(saveDocumentInformation);
-        window.dispatchEvent(new Event('storage'));
       } else {
-        if (!(document.currentDocumentTitle in savedDocumentsObject)) {
-          savedDocumentsObject[document.currentDocumentTitle] = {
-            documentMarkdown: document.documentMarkdown,
-            date: createSaveDate(new Date()),
-          };
-          delete savedDocumentsObject[document.originalDocumentTitle];
-          localStorage.setItem(
-            'savedMarkdown',
-            JSON.stringify(savedDocumentsObject)
-          );
-          dispatch(saveDocumentInformation());
-          window.dispatchEvent(new Event('storage'));
-        } else {
-          dispatch(displayModal('overwrite'));
-        }
+        dispatch(
+          displayModal(
+            `Document ${
+              document?.currentDocumentTitle || ''
+            } will have its contents overwritten. This action cannnot be reversed.`,
+            'Duplicate document',
+            'overwrite'
+          )
+        );
       }
     }
-  };
-
-  ...
-
-}
+  }
+}, [document]);
 ```
 
-The `saveDocument` function works as follows:
+the `saveDocument` function is responsible for validating document titles, checking the _new_ document status, and confirming if a document needs to be overwritten. Within the [TopBar.tsx component](/src/features/TopBar/components/TopBar/TopBar.tsx), when the _save button_ is clicked, the function is called and executes the following:
 
-1. The function grabs all saved documents from local storage, if somehow there is no current document (users can go into the local storage and erase the data), then the function returns.
-2. The current document title is then verified using a regex, if invalid, then the `displayModal` function is called with the "title" argument, which is passed into the dispatch function to display the _invalid title_ modal to the user. The function then returns.
+1. If there is no current document (users can go into the local storage and erase the data), then the function returns.
+2. The current document title is verified using a regex, if invalid, then the `displayModal` function is called with the "title" argument, which is passed into the dispatch function to display the _invalid title_ modal to the user. The function then returns.
 3. Next the function checks if there are any documents in the local storge, if none exist, then it is safe to assume that there is no document with the same title as the current one, so the markdown information is stringified and set as the local storage data, a date property is also inserted into the object to keep track of when the document was last saved (more on this later).
 
    - After this, the dispatch function is passed the result of `saveDocumentInformation` which will update the redux store with the current document information, which sets the original title to the current title, and sets the `newDocument` property to false. Finally, the `window` object fires a storage event, which will ensure that the left-side bar will populate the document list with the latest saved document infomration.
 
-4. If documents exist in local storage and the current document is new, then we check to see if the current document title already exists in the local storage. If it does, then the `displayModal` function is called with the "overwrite" argument, which is passed into the dispatch function to display the _overwrite_ modal to the user (modal logic will be explained later).
+4. If documents exist in local storage and the current document is new, then we need check if the current document title already exists in the local storage. If it does, then the `displayModal` function is called with the "overwrite" argument, which is passed into the dispatch function to display the _overwrite_ modal to the user.
 
-   - If the title does not exist, then the current document is added to the local storage data, and the dispatch function is passed the result of `saveDocumentInformation` which will update the redux store with the current document information. Finally, the `window` object fires a storage event, which will ensure that the left-side bar will populate the document list with the latest saved document.
+   - If the title does not exist, then the current document is added to the local storage data, and the dispatch function is passed the result of `saveDocumentInformation` which will update the redux store with the current document information. Like before, the `storage` event is fired to ensure that our document list is up to date with what we just inserted into local storage.
 
-5. If documents exists in local storage and the current document is not new, then we check to see if the current document title is the same as the original document title. If it is, then we can safely assume that the user is saving the document with the same title, so we can just overwrite the local storage data with the current document information, and the dispatch function is passed the result of `saveDocumentInformation` which will update the redux store with the current document information. Finally, the `window` object fires a storage event, which updates the left side bar with the latest saved document information.
+5. If documents exists in local storage and the current document is not new, then we check to see if the current document title is the same as the original document title. If it is, then we can safely assume that the user is saving the document with the same title, so we can just overwrite the local storage data with the current document information and the dispatch function is passed the result of `saveDocumentInformation` which will update the redux store with the current document information. If the current document doesn't exist in local storage then just add it to the local storage data, else if the document exists that means the markdown document needs to be overwritten and the _ovewrite_ modal will be displayed.
 
-   - If the current document doesnt exist in local storage then just add it to the local storage data, else if the document exists that means the markdown document needs to be overwritten and the _ovewrite_ modal will be displayed.
-
-If the document needs to be overwritten, the function which executes this action is in `App.tsx`:
-
-```typescript
-const confirmOverwrite = () => {
-  if (!document) return;
-  const isNewDocument = document.isNewDocument;
-  const savedMarkdown = localStorage.getItem('savedMarkdown');
-  if (!savedMarkdown) return;
-  const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
-
-  if (isNewDocument) {
-    savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
-      document.documentMarkdown;
-    savedMarkdownObject[document.currentDocumentTitle].date = createSaveDate(
-      new Date()
-    );
-    dispatch(saveDocumentInformation());
-  } else {
-    delete savedMarkdownObject[document.originalDocumentTitle];
-    savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
-      document.documentMarkdown;
-    savedMarkdownObject[document.currentDocumentTitle].documentMarkdown =
-      createSaveDate(new Date());
-    dispatch(saveDocumentInformation());
-  }
-
-  localStorage.setItem('savedMarkdown', JSON.stringify(savedMarkdownObject));
-  dispatch(removeModal('overwrite'));
-  window.dispatchEvent(new Event('storage'));
-};
-```
-
-If the overwrite occurs with a new document, then the function will grab the current document title and markdown information, and update the local storage data with the new information and fire the dispatch to update the redux store. If not a new document, that means we the currnet document had its title changed, so the document with teh original title is deleted from the local storage and the current document information is added to the local storage data. 
-
+When the _overwrite_ modal appears, user's must confirm the action before it is executed.
 
 #### Deleting a Document
 
-The logic for deleting a document exists in `App.tsx`, but the function to display the modal to fire the action to delete the document lives in the `TopBar.tsx` component.
+When deleting the document, there are two main actions that occur:
 
-In `TopBar.tsx`:
+1. Rendering the modal to confirm the deletion
+2. The deletion itself.
+
+Within `document-action.ts`, the following function is declared:
 
 ```typescript
-<DocOptions>
-  <DeleteButton
-    disabled={disableAction}
-    onClick={() => dispatch(displayModal('delete'))}
-  >
-    <img src={deleteIcon} alt="Click to delete the document" />
-  </DeleteButton>
-  <SaveButton
-    disabled={disableAction}
-    data-cy="saveDocumentButton"
-    onClick={() => saveDocument()}
-  >
-    <div>
-      <img src={saveIcon} alt="Save the document" />
-    </div>
-    <p>save changes</p>
-  </SaveButton>
-</DocOptions>
+const deleteDoc = useCallback(() => {
+  dispatch(
+    displayModal(
+      'Are you sure you want to delete the current document and its contents? This action cannot be reversed.',
+      'Delete Document',
+      'delete'
+    )
+  );
+}, []);
 ```
 
-In the code block above, when a user clicks the delete button, the dispatch function is called with the result of `displayModal` passed the 'delete' argument to display the _delete_ modal.
-
-The user is shown the modal, and can cancel or confirm the action.
-
-In `App.tsx`:
+In `TopBar.tsx`, the delete button will fire the function above, which in turn will render the modal. Once the modal renders and the user confirms the action, the following function will be called:
 
 ```typescript
-const confirmDelete = () => {
+const confirmDelete = useCallback(() => {
   if (!document) return;
 
   if (document.isNewDocument) {
@@ -506,247 +463,128 @@ const confirmDelete = () => {
 
   const savedDocuments = localStorage.getItem('savedMarkdown');
   if (!savedDocuments) {
-    dispatch(removeModal('delete'));
+    dispatch(removeModal());
     dispatch(deleteDocument());
-    setShowMenu(false);
     return;
   }
   const savedDocumentsObject = JSON.parse(savedDocuments) as SavedDocument;
   delete savedDocumentsObject[document.originalDocumentTitle];
   localStorage.setItem('savedMarkdown', JSON.stringify(savedDocumentsObject));
 
-  dispatch(removeModal('delete'));
+  dispatch(removeModal());
   dispatch(deleteDocument());
   window.dispatchEvent(new Event('storage'));
-};
+}, [document]);
 ```
 
 In the `confirmDelete` function above, the following occurs:
 
-1. If there is no document present, just return to avoid errors.
-2. Grab all documents in local storage, and if there are no documents, then just delete the document from the redux store.
-3. If documents exists in local storage, delete the object with the title name, and set local storage to a new object which no longer has the current document information.
+1. If there is no document present, return to avoid errors.
+2. Grab all documents in local storage, and if there are no documents, then delete the document from the redux store.
+3. If documents exist in local storage, delete the object with the title name, and set local storage to a new object which no longer has the current document information.
 4. Finally, the dispatch to remove the modal is fired, the document is removed from the Redux store, and the `window` object fires a storage event which ensures the document list reflects this change.
 
 #### Creating a new Document
 
-The `Menu.tsx` component contains the function to display the modal to create a new document, depending on if the current document is _new_ or not, a variant of this modal will be shown. `App.tsx` contains the function to clear the modal and set a new document in the Redux store.
+The `Menu.tsx` renders a button to create a new document, but since we don't want to immediately lose all saved work, the `newDoc` function from the `useDocumentAction` hook is used to render a modal that displays the two variants:
 
-In `Menu.tsx`:
+- A modal that asks the user if they want to discard a _new_ document.
+- A modal that asks the user if they want to discard a _saved_ document.
 
-```typescript
-const Menu = ({ showMenu, setTheme, theme }: MenuProps) => {
-  const { document } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
-
-  const newDocumentToggle = () => {
-    if (!document) dispatch(setNewDocument());
-    else if (document.isNewDocument) dispatch(displayModal('discardNew'));
-    else dispatch(displayModal('discardSaved'));
-  };
-  return (
-    <MenuStyled menuVisible={showMenu}>
-      <MenuLogo>
-        <img src={MarkdownLogo} alt="Markdown logo" />
-      </MenuLogo>
-      <MenuTitle>my documents</MenuTitle>
-      <MenuDocButton onClick={newDocumentToggle} data-cy="newDocumentButton">
-        + new document
-      </MenuDocButton>
-
-      <DocumentList />
-      <ThemeToggle setTheme={setTheme} theme={theme} />
-    </MenuStyled>
-  );
-};
-```
-
-The `newDocumentToggle` function executes the following:
-
-1. If there is no document currently store, call the dispatch function with the results of `setNewDocument` which will set a new document in the redux store.
-2. If there is a document, and the document is new, then call the dispatch function with the results of `displayModal` which will display the _discard new_ modal to the user.
-3. If there is a document, and the document is not new, then call the dispatch function with the results of `displayModal` which will display the _discard saved_ modal to the user.
-
-The only difference between the two modals is that one indicates to the user that any un-saved changes will be lost, and the other indicates that the new document will be discarded.
-
-In `App.tsx`
+Either way, the following function from the `useModalAction` hook will execute when user confirms the action:
 
 ```typescript
-const confirmDiscard = () => {
+const confirmDiscard = useCallback(() => {
   dispatch(setNewDocument());
-  setShowMenu(false);
-};
+  dispatch(removeModal());
+}, []);
 ```
 
-The function above sets the redux store to a new document, and sets a boolean to false to hide the menu.
+The `confirmDiscard` function will render the `newDocument` markdown text on the page, and hide the modal.
 
 #### Switching Documents
 
-Each `DocumentListItem.tsx` component contains the function `switchDocument` which when fired, will set the target document in the redux store. The `DocumentList.tsx` component grabs all documents from local storage and maps over them to render each instance of `DocumentListItem.tsx`.
-
-In `DocumentListItem.tsx`:
+[DocumentList.tsx](/src/features/Menu/components/DocumentList/DocumentList.tsx) renders a list of saved documents based on data from the local storage. Each document is represented by the [DocumentListItem.tsx](/src/features/Menu/components/DocumentList/DocumentListItem/DocumentListItem.tsx) component, which when clicked, fires the `switchDoc` function from the `useDocumentAction` hook. If there is no document on the page and the clicked doc is valid, then it is rendered on the page. Else, a modal that asks the user if they want to switch will be rendered. If the user confirms the action, the following function is called:
 
 ```typescript
-const DocumentListItem = ({
-  documentDate,
-  documentTitle,
-}: DocumentListItemProps) => {
-  const dispatch = useAppDispatch();
-  const { document } = useAppSelector((state) => state);
-  const switchDocument = () => {
-    const savedMarkdown = localStorage.getItem('savedMarkdown');
-    if (!savedMarkdown) {
-      return;
-    }
+const confirmSwitch = useCallback(() => {
+  const targetDocumentTitle = targetSwitch;
+  const savedMarkdown = localStorage.getItem('savedMarkdown');
+  if (!savedMarkdown || !targetDocumentTitle) return;
 
-    if (!document) {
-      const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
-      if (!savedMarkdownObject[documentTitle]) {
-        return;
-      }
+  const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
 
-      dispatch(
-        changeDocument(
-          documentTitle,
-          savedMarkdownObject[documentTitle].documentMarkdown
-        )
-      );
-      return;
-    } else {
-      dispatch(applyTargetDoc(documentTitle));
-      dispatch(displayModal('switch'));
-    }
-  };
-
-  return (
-    <DocumentListItemStyled tabIndex={0} onClick={switchDocument}>
-      <div>
-        <img src={fileIcon} alt="file icon" />
-      </div>
-      <ListItemInfo>
-        <p>{documentDate}</p>
-        <h4>{documentTitle}</h4>
-      </ListItemInfo>
-    </DocumentListItemStyled>
-  );
-};
-```
-
-The `switchDocument` function executes the following:
-
-1. Grabs all documents in local storage
-2. If no documents exists, return to avoid errors.
-3. If there is no document in the redux store and the target document does exist in local storage, call the dispatch function with `changeDocument` which takes in the target document title and the markdown to render.
-   - If a document currently exists in the store, the user will be notified that any unsaved changes will be lost on the switch by calling `DisplayModal` with the `switch` variant in the dispatch function. `App.tsx` contains the function to confirm or discard the switch.
-
-In `DocumentList.tsx`:
-
-```typescript
-const DocumentList = () => {
-  const [docList, setDocList] = useState<SavedDocument>({});
-
-  useEffect(() => {
-    const checkLocalStorage = () => {
-      const savedMarkdown = localStorage.getItem('savedMarkdown');
-      if (savedMarkdown) {
-        const savedMarkdownObject = JSON.parse(savedMarkdown) as SavedDocument;
-        setDocList(savedMarkdownObject);
-      }
-    };
-
-    checkLocalStorage();
-
-    window.addEventListener('storage', checkLocalStorage);
-
-    return () => {
-      window.removeEventListener('storage', checkLocalStorage);
-    };
-  }, []);
-
-  if (Object.keys(docList).length === 0)
-    return (
-      <div>
-        <p>No Documents</p>
-      </div>
+  if (!savedMarkdownObject[targetDocumentTitle]) {
+    dispatch(removeTargetDoc());
+    dispatch(removeModal());
+    return;
+  } else {
+    dispatch(
+      changeDocument(
+        targetDocumentTitle,
+        savedMarkdownObject[targetDocumentTitle].documentMarkdown
+      )
     );
-
-  return (
-    <DocumentListStyled data-cy="documentList">
-      {Object.keys(docList).map((doc) => (
-        <DocumentListItem
-          key={doc}
-          documentDate={docList[doc].date}
-          documentTitle={doc}
-        />
-      ))}
-    </DocumentListStyled>
-  );
-};
+  }
+  dispatch(removeTargetDoc());
+  dispatch(removeModal());
+}, [document]);
 ```
 
-In the component above, a `useEffect` hook is used to extract document information from local storage, parse it into a format that can be used by the state, and apply document list to the state. The `useEffect` hook also adds an event listener to the window object to listen for changes to local storage. If a change is detected, the `checkLocalStorage` function is called again to update the state with the new document list.
+The `confirmSwitch` function within the `useModalAction` hook executes the following:
+
+1. Grabs all documents in local storage and the current document title.
+2. If no documents exists in local storage, or there is no document to switch to, return.
+3. If the target document cannot be found in the local storage, ensuring to catch errors, then remove the target document and the modal.
+4. If all checks had passed at this point, then there is a document to switch to. The `changeDocument` method is passed into the dispatch, taking in the document title and markdown to render on the page.
+5. The modal and target document are removed.
 
 #### Editing Markdown.
 
-The `MarkdownTextArea.tsx` component contains the `textarea` where users can edit markdown and fires the dispatch function to update the Redux store with the new markdown. The component can be seen below:
+The [MarkdownTextArea.tsx component](/src/features/DocumentEdit/components/MarkdownTextArea/MarkdownTextArea.tsx) contains the `textarea` where users can edit markdown. As users edit the text area, the `updateDoc` function from the `useDocumentAction` hook is called to update the markdown in the Redux store. Originally I planned to just have this state contained within component itself, however, multiple components around the application needed access to this information; so the state would need to exist within the redux store. `updateDoc` simply calls the `updateMarkdown` action from the reducer.
+
+One tricky part of editing the document was inserting a _tab_ character when the user presses the tab key. By default, when a user tabs in a text-area, the keyboard navigates to the next tab target. To insert a tab character, a `keyDown` event was implemented within the `textarea`, see below:
 
 ```typescript
-const MarkdownTextArea = ({ adjustPreview }: MarkdownTextAreaProps) => {
-  const documentState = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+<textarea
+  data-cy="markdownTextArea"
+  value={document?.documentMarkdown || ''}
+  onChange={(e) => updateDoc(e.target.value)}
+  onBlur={(e) => updateDoc(e.target.value)}
+  onKeyDown={(e) => {
+    const textArea = e.target;
+    if (!(textArea instanceof HTMLTextAreaElement)) return;
+    if (e.key == 'Tab') {
+      e.preventDefault();
+      const start = textArea.selectionStart;
+      const end = textArea.selectionEnd;
 
-  return (
-    <MarkdownTextAreaStyled>
-      <div>
-        <h1>markdown</h1>
-        <button onClick={adjustPreview} aria-label="toggle fullscreen preview">
-          <img src={showPreviewIcon} alt="" />
-        </button>
-      </div>
-      <div>
-        <textarea
-          data-cy="markdownTextArea"
-          value={documentState.document?.documentMarkdown || ''}
-          onChange={(e) => dispatch(updateMarkdown(e.target.value))}
-          onBlur={(e) => dispatch(updateMarkdown(e.target.value))}
-          onKeyDown={(e) => {
-            const textArea = e.target;
-            if (!(textArea instanceof HTMLTextAreaElement)) return;
-            if (e.key == 'Tab') {
-              e.preventDefault();
-              const start = textArea.selectionStart;
-              const end = textArea.selectionEnd;
+      textArea.value =
+        textArea.value.substring(0, start) +
+        '   ' +
+        textArea.value.substring(end);
 
-              textArea.value =
-                textArea.value.substring(0, start) +
-                '   ' +
-                textArea.value.substring(end);
-
-              textArea.selectionStart = textArea.selectionEnd = start + 3;
-              dispatch(updateMarkdown(textArea.value));
-            }
-          }}
-        />
-      </div>
-    </MarkdownTextAreaStyled>
-  );
-};
+      textArea.selectionStart = textArea.selectionEnd = start + 3;
+      updateDoc(textArea.value);
+    }
+  }}
+/>
 ```
 
-One tricky part of editing the document was inserting a _tab_ character when the user presses the tab key. By default, when a user tabs in a text-area, the keyboard navigates to the next tab target. To insert a tab character, a `keyDown` event was required that did the following:
+The `onKeyDown` attribute placed within the `textarea` executes the following:
 
 1. Extract the text area from the event target and ensure that it is an HTMLTextAreaElement (Typescript check).
 2. If the key pressed is the tab key, prevent the default action of leaving the `textarea`.
 3. Grab the start and end of the selection in the text area, then insert three spaces at the start position, and concat the rest of the string after the end position.
 4. Set the selection start and end to the start position plus 3 (the length of the tab character) to position cursor in its new position.
-5. Dispatch the `updateMarkdown` action with the new markdown string.
+5. Call `updateDoc` to update the markdown in the store.
 
 #### Preview Markdown
 
-The `PreviewTextArea.tsx` component extracts the document markdown from the Redux store and uses _marked_ to parse the markdown into HTML. The component can be seen below:
+The [PreviewTextArea.tsx component](/src/features/DocumentEdit/components/PreviewTextArea/PreviewTextArea.tsx) extracts the document markdown from the Redux store and uses _marked_ library to parse the markdown into a valid HTML string. The component can be seen below:
 
 ```typescript
-const PreviewTextArea = ({
+export const PreviewTextArea = ({
   adjustPreview,
   fullPreview,
 }: PreviewTextAreaProps) => {
@@ -772,7 +610,7 @@ const PreviewTextArea = ({
 };
 ```
 
-The prop `fullPreview` will display the preview area as full screen if true, else it will share the screen with the markdown editor component. The `dangerouslySetInnerHTML` prop is used to render the HTML string returned from the `marked` function. The `DOMPurify` library is used to sanitize the HTML string to prevent XSS attacks. Since each store change renders the component, the variable `html` will be constantly updated with the new markdown.
+The prop `fullPreview` will display the preview area as full screen if true, else it will share the screen with the `MarkdownTextArea.tsx` component. The `dangerouslySetInnerHTML` prop is used to render the HTML string returned from the `marked` function. The markdown is first passed through the `sanitize` method from the `DomPurify` method to sanitize the HTML string.
 
 ## Conclusion
 
@@ -780,8 +618,9 @@ Overall this was a fun project to work on. I felt that I was able to get a good 
 
 Some things I look to improve include:
 
-1. Simplying logic, I feel that I put too many important functions in `App.tsx`, using Redux there must be a better way to organize these fucntions.
-2. Implement unit test that would have helped me solve some of the bugs I encountered in specific components.
-3. Migrate from local storage to `IndexedDB` for offline storage, and eventually add support for authentication so users can save their documents to a database to be accessed anywhere.
+1. Implement unit test that would have helped me solve some of the bugs I encountered in specific components.
+2. Migrate from local storage to `IndexedDB` for offline storage, and eventually add support for authentication so users can save their documents to a database to be accessed anywhere.
 
-If you find any issues or have suggestions, please feel free to open an issue or pull request!
+I would like to discuss the _render_ issues that some may notice. Most actions on the page (menu open, type, etc.) will cause almost the entire page to re-render. As of the current state of the application, since renders are short and efficient, this isn't much of a problem. I believe in the idea of not "over-optimizing"; React is meant to render the application and is built to be very good at that. Introducing multiple optimization techniques when the performance is fine does nothing more than over-complicate our components. Plus, these methods themselves come at a price. Until peformance becomes noticeable issue, it is best to leave it be.
+
+If you find problems or have suggestions, please feel free to open an issue or pull request! Thanks for reading!
